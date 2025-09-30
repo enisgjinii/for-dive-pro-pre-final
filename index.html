@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>divePRO+ - Next-Gen Dive Computer</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/meshoptimizer@0.18.1/meshopt_decoder.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
     <style>
@@ -677,46 +679,6 @@
         renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
         camera.position.z = 6;
 
-        // Create dive mask 3D model - LARGER AND MORE VISIBLE
-        const maskGeometry = new THREE.TorusGeometry(2, 0.5, 16, 100);
-        const maskMaterial = new THREE.MeshStandardMaterial({
-            color: 0xff6b35,
-            metalness: 0.7,
-            roughness: 0.3,
-            emissive: 0xff6b35,
-            emissiveIntensity: 0.2,
-        });
-        const mask = new THREE.Mesh(maskGeometry, maskMaterial);
-        mask.rotation.x = Math.PI / 6;
-        scene.add(mask);
-
-        // Add glass/lens effect - LARGER
-        const lensGeometry = new THREE.SphereGeometry(1.6, 32, 32, 0, Math.PI);
-        const lensMaterial = new THREE.MeshStandardMaterial({
-            color: 0x4a90e2,
-            metalness: 0.9,
-            roughness: 0.1,
-            transparent: true,
-            opacity: 0.4,
-            emissive: 0x4a90e2,
-            emissiveIntensity: 0.1,
-        });
-        const lens = new THREE.Mesh(lensGeometry, lensMaterial);
-        lens.rotation.y = Math.PI;
-        lens.position.z = 0.7;
-        scene.add(lens);
-
-        // Add frame details - LARGER
-        const frameGeometry = new THREE.TorusGeometry(2, 0.15, 8, 50);
-        const frameMaterial = new THREE.MeshStandardMaterial({
-            color: 0x2c3e50,
-            metalness: 0.8,
-            roughness: 0.2,
-        });
-        const frame = new THREE.Mesh(frameGeometry, frameMaterial);
-        frame.rotation.x = Math.PI / 6;
-        scene.add(frame);
-
         // Lighting - BRIGHTER
         const ambientLight = new THREE.AmbientLight(0xffffff, 0.8);
         scene.add(ambientLight);
@@ -733,14 +695,70 @@
         pointLight3.position.set(0, 0, 10);
         scene.add(pointLight3);
 
-        // Group all objects
+        // Group for imported model
         const group = new THREE.Group();
-        group.add(mask);
-        group.add(lens);
-        group.add(frame);
         scene.add(group);
         
-        group.position.x = 2;
+        const loader = new THREE.GLTFLoader();
+        if (window.MeshoptDecoder) {
+            loader.setMeshoptDecoder(window.MeshoptDecoder);
+        } else {
+            console.warn('MeshoptDecoder not available; compressed GLB assets may fail to load.');
+        }
+        const targetModelSize = 5.5; // Desired diameter in scene units
+        loader.load(
+            '3D_Model.glb',
+            (gltf) => {
+                const model = gltf.scene;
+
+                model.traverse((child) => {
+                    if (child.isMesh) {
+                        child.castShadow = false;
+                        child.receiveShadow = false;
+                    }
+                });
+
+                model.updateMatrixWorld(true, true);
+
+                const bounds = new THREE.Box3();
+                const scratchBox = new THREE.Box3();
+                model.traverse((child) => {
+                    if (child.isMesh && child.geometry) {
+                        if (!child.geometry.boundingBox) {
+                            child.geometry.computeBoundingBox();
+                        }
+                        scratchBox.copy(child.geometry.boundingBox);
+                        scratchBox.applyMatrix4(child.matrixWorld);
+                        bounds.union(scratchBox);
+                    }
+                });
+
+                if (bounds.isEmpty()) {
+                    bounds.setFromObject(model);
+                }
+
+                const center = bounds.getCenter(new THREE.Vector3());
+                const size = bounds.getSize(new THREE.Vector3());
+
+                model.position.sub(center);
+
+                const pivot = new THREE.Group();
+                pivot.add(model);
+
+                const maxAxis = Math.max(size.x, size.y, size.z) || 1;
+                const scale = targetModelSize / maxAxis;
+                pivot.scale.setScalar(scale);
+                pivot.position.y = -0.2;
+
+                group.add(pivot);
+            },
+            undefined,
+            (error) => {
+                console.error('Error loading 3D model:', error);
+            }
+        );
+
+        group.position.set(1, 0, 0);
 
         // GSAP ScrollTrigger Setup
         gsap.registerPlugin(ScrollTrigger);
