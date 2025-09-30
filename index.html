@@ -1,0 +1,814 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>divePRO+ - Next-Gen Dive Computer</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: #000;
+            color: #fff;
+            overflow-x: hidden;
+        }
+
+        /* 3D Canvas Background */
+        #canvas3d {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 2rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            backdrop-filter: blur(20px);
+            background: rgba(10, 22, 40, 0.8);
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            color: #fff;
+        }
+
+        .logo-pro {
+            font-size: 0.7rem;
+            vertical-align: super;
+            font-weight: 400;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 3rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.3s;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            font-weight: 500;
+        }
+
+        .nav-links a:hover {
+            color: #fff;
+        }
+
+        /* Section Container */
+        section {
+            position: relative;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            padding: 0 5%;
+            z-index: 10;
+        }
+
+        .hero {
+            background: linear-gradient(180deg, rgba(10, 22, 40, 0.7) 0%, rgba(26, 47, 77, 0.7) 100%);
+        }
+
+        .section2 {
+            background: linear-gradient(180deg, rgba(26, 47, 77, 0.7) 0%, rgba(42, 74, 109, 0.7) 100%);
+        }
+
+        .section3 {
+            background: linear-gradient(180deg, rgba(42, 74, 109, 0.7) 0%, rgba(26, 58, 93, 0.7) 100%);
+        }
+
+        .content {
+            max-width: 600px;
+            z-index: 50;
+            position: relative;
+        }
+
+        .section-title {
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 300;
+            line-height: 1.2;
+            margin-bottom: 2rem;
+            letter-spacing: -0.02em;
+        }
+
+        .section-title strong {
+            font-weight: 700;
+        }
+
+        .section-description {
+            font-size: 1.1rem;
+            color: rgba(255, 255, 255, 0.8);
+            line-height: 1.6;
+            font-weight: 300;
+        }
+
+        .hero .section-title {
+            font-size: clamp(3rem, 6vw, 5rem);
+        }
+
+        /* Features Section */
+        .features-section {
+            background: linear-gradient(180deg, rgba(21, 40, 64, 0.8) 0%, rgba(26, 53, 80, 0.8) 100%);
+            min-height: 100vh;
+            padding: 8rem 5%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 4rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .feature-item {
+            text-align: center;
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            color: #ff6b35;
+            margin-bottom: 1.5rem;
+        }
+
+        .feature-title {
+            font-size: 1.8rem;
+            font-weight: 300;
+            margin-bottom: 1rem;
+        }
+
+        .feature-desc {
+            color: rgba(255, 255, 255, 0.7);
+            line-height: 1.6;
+            font-size: 0.95rem;
+        }
+
+        .view-all-btn {
+            display: inline-block;
+            margin: 4rem auto 0;
+            padding: 1rem 3rem;
+            background: #ff6b35;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 600;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .view-all-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(255, 107, 53, 0.4);
+        }
+
+        /* App Section */
+        .app-section {
+            background: linear-gradient(135deg, rgba(10, 22, 40, 0.8) 0%, rgba(26, 47, 77, 0.8) 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            padding: 5rem 5%;
+        }
+
+        .app-content {
+            display: flex;
+            align-items: center;
+            gap: 5rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .app-text {
+            flex: 1;
+        }
+
+        .app-text h2 {
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 2rem;
+        }
+
+        .app-buttons {
+            display: flex;
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .btn-primary {
+            padding: 1rem 2.5rem;
+            background: #ff6b35;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 600;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(255, 107, 53, 0.4);
+        }
+
+        .btn-secondary {
+            padding: 1rem 2.5rem;
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 600;
+            transition: all 0.3s;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .app-phones {
+            flex: 1;
+            display: flex;
+            gap: 2rem;
+            justify-content: center;
+        }
+
+        .phone-mockup {
+            width: 280px;
+            height: 570px;
+            background: linear-gradient(135deg, #1a2850 0%, #0f1a35 100%);
+            border-radius: 40px;
+            border: 8px solid #000;
+            padding: 1rem;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+        }
+
+        .phone-screen {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(180deg, #1a2f5d 0%, #0f1a35 100%);
+            border-radius: 32px;
+            padding: 1.5rem;
+            color: #fff;
+            font-size: 0.75rem;
+        }
+
+        /* CTA Section */
+        .cta-section {
+            background: linear-gradient(135deg, rgba(26, 58, 93, 0.8) 0%, rgba(42, 90, 141, 0.8) 100%);
+            min-height: 70vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 5rem 5%;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-content h2 {
+            font-size: clamp(3rem, 7vw, 6rem);
+            font-weight: 700;
+            margin-bottom: 2rem;
+            letter-spacing: -0.02em;
+        }
+
+        .cta-btn {
+            padding: 1.2rem 3rem;
+            background: rgba(0, 0, 0, 0.6);
+            color: #fff;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 600;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            backdrop-filter: blur(10px);
+        }
+
+        .cta-btn:hover {
+            background: rgba(0, 0, 0, 0.8);
+            transform: translateY(-2px);
+        }
+
+        /* Footer */
+        footer {
+            background: #f5f5f5;
+            color: #1a2f4d;
+            padding: 5rem 5% 2rem;
+        }
+
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 4rem;
+            margin-bottom: 4rem;
+        }
+
+        .footer-brand h3 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 2rem;
+            color: #0a1628;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .social-link {
+            width: 50px;
+            height: 50px;
+            border: 2px solid #ff6b35;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ff6b35;
+            text-decoration: none;
+            transition: all 0.3s;
+            font-size: 1.2rem;
+        }
+
+        .social-link:hover {
+            background: #ff6b35;
+            color: #fff;
+        }
+
+        .footer-section h4 {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 1.5rem;
+            color: #ff6b35;
+            font-weight: 600;
+        }
+
+        .footer-section ul {
+            list-style: none;
+        }
+
+        .footer-section ul li {
+            margin-bottom: 0.8rem;
+        }
+
+        .footer-section a {
+            color: #1a2f4d;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-section a:hover {
+            color: #ff6b35;
+        }
+
+        .footer-bottom {
+            border-top: 1px solid #ddd;
+            padding-top: 2rem;
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 2rem;
+            font-size: 0.9rem;
+            color: #1a2f4d;
+        }
+
+        .footer-contact {
+            display: flex;
+            gap: 3rem;
+            flex-wrap: wrap;
+        }
+
+        .footer-legal {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .qr-icon {
+            width: 50px;
+            height: 50px;
+            background: #1a2f4d;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+        }
+
+        /* Starfield */
+        .stars {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .star {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 50%;
+            animation: twinkle 3s infinite;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 1; }
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .app-content {
+                flex-direction: column;
+            }
+
+            .footer-content {
+                grid-template-columns: 1fr;
+                gap: 3rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            nav {
+                padding: 1.5rem 5%;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+                gap: 3rem;
+            }
+
+            .app-phones {
+                flex-direction: column;
+            }
+
+            .footer-bottom {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <canvas id="canvas3d"></canvas>
+    <div class="stars" id="stars"></div>
+
+    <nav>
+        <div class="logo">
+            dive<span class="logo-pro">PRO+</span>
+        </div>
+        <ul class="nav-links">
+            <li><a href="#features">Features</a></li>
+            <li><a href="#application">Application</a></li>
+            <li><a href="#about">About Us</a></li>
+            <li><a href="#blog">Blog</a></li>
+            <li><a href="#contact">Contact</a></li>
+        </ul>
+    </nav>
+
+    <section class="hero" id="hero">
+        <div class="content">
+            <h1 class="section-title">
+                THE ONLY <strong>DIVE COMPUTER</strong> THAT SEES YOU THROUGH
+            </h1>
+            <p class="section-description">
+                Your vital dive data & insights seamlessly projected, without breaking your flow.
+            </p>
+        </div>
+    </section>
+
+    <section class="section2" id="section2">
+        <div class="content">
+            <h2 class="section-title">
+                <strong>REAL-TIME VITALS MONITORING</strong>
+            </h2>
+            <p class="section-description">
+                Vitals, dive data, and alerts discreetly projected. Always visible, never in your way.
+            </p>
+        </div>
+    </section>
+
+    <section class="section3" id="section3">
+        <div class="content">
+            <h2 class="section-title">
+                <strong>AUGMENTED REALITY DISPLAY</strong>
+            </h2>
+            <p class="section-description">
+                The only dive computer built to show your heart rate, oxygen saturation & much more in real-time.
+            </p>
+        </div>
+    </section>
+
+    <section class="section2">
+        <div class="content">
+            <h2 class="section-title">
+                <strong>CONNECTED DIVE ECOSYSTEM</strong>
+            </h2>
+            <p class="section-description">
+                From biometrics to GPS, your data syncs to the divePRO cloud. Access post-dive analytics, dive history, and build a performance-driven logbook.
+            </p>
+        </div>
+    </section>
+
+    <section class="features-section" id="features">
+        <div class="features-grid">
+            <div class="feature-item">
+                <div class="feature-icon">❤️</div>
+                <h3 class="feature-title">Vitals</h3>
+                <p class="feature-desc">Heart rate and O₂ saturation, Heart Rate Variability (HRV), Breathing Rate & more</p>
+            </div>
+            <div class="feature-item">
+                <div class="feature-icon">📊</div>
+                <h3 class="feature-title">Dive Computer Data</h3>
+                <p class="feature-desc">Depth, time, temperature, ascent speed, NDL awareness & more - all integrated into a single Augmented Reality view</p>
+            </div>
+            <div class="feature-item">
+                <div class="feature-icon">👓</div>
+                <h3 class="feature-title">Tech Specs</h3>
+                <p class="feature-desc">eSIM, GPS, Bluetooth, hours of continuous dive time and more</p>
+            </div>
+            <div class="feature-item">
+                <div class="feature-icon">📦</div>
+                <h3 class="feature-title">What's in the box</h3>
+                <p class="feature-desc">divePRO AR Dive Computer Mask, Magnetic USB charging cable, Premium neoprene mask strap</p>
+            </div>
+        </div>
+        <center>
+            <a href="#" class="view-all-btn">View all features</a>
+        </center>
+    </section>
+
+    <section class="app-section">
+        <div class="app-content">
+            <div class="app-text">
+                <div class="qr-icon"></div>
+                <h2>TRACK & ANALYZE YOUR DIVES</h2>
+                <div class="app-buttons">
+                    <a href="#" class="btn-primary">Download the App 📱</a>
+                    <a href="#" class="btn-secondary">View more</a>
+                </div>
+            </div>
+            <div class="app-phones">
+                <div class="phone-mockup">
+                    <div class="phone-screen">
+                        <p style="margin-bottom: 1rem; opacity: 0.8;">Your metrics in a single view</p>
+                        <p style="font-size: 0.7rem; opacity: 0.6;">Lorem ipsum is simply dummy text of the printing and typesetting industry.</p>
+                    </div>
+                </div>
+                <div class="phone-mockup">
+                    <div class="phone-screen">
+                        <p style="margin-bottom: 1rem; opacity: 0.8;">Your activity</p>
+                        <p style="font-size: 2rem; font-weight: 700; margin: 1rem 0;">03:48:58</p>
+                        <p style="font-size: 0.7rem; opacity: 0.6;">Dive minutes</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="cta-section">
+        <div class="cta-content">
+            <h2>SEA BEYOND</h2>
+            <a href="#" class="cta-btn">Preorder now →</a>
+        </div>
+    </section>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-brand">
+                <h3>THE FIRST DIVE AUGMENTED REALITY COMPUTER</h3>
+                <div class="social-links">
+                    <a href="#" class="social-link">📷</a>
+                    <a href="#" class="social-link">💼</a>
+                    <a href="#" class="social-link">✕</a>
+                    <a href="#" class="social-link">▶</a>
+                </div>
+            </div>
+            <div class="footer-section">
+                <h4>■ OUR COMPANY</h4>
+                <ul>
+                    <li><a href="#about">About us</a></li>
+                    <li><a href="#sustainability">Sustainability & Social Responsibility</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>■ CUSTOMER SERVICE</h4>
+                <ul>
+                    <li><a href="#support">Support Centre</a></li>
+                    <li><a href="#order">Order Support</a></li>
+                    <li><a href="#warranty">Warranty information</a></li>
+                    <li><a href="#data">Data Management</a></li>
+                    <li><a href="#dealer">Find a dealer</a></li>
+                    <li><a href="#downloads">Downloads</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <div class="footer-contact">
+                <div>✈ Dionisiou Aeropagitou 21, 31200 Athens Greece</div>
+                <div>✉ adress@addressdivepro.com</div>
+                <div>☎ +30 2112244566</div>
+            </div>
+            <div class="footer-legal">
+                <a href="#privacy">PRIVACY AND TERMS</a>
+                <a href="#cookies">COOKIES PREFERENCES</a>
+            </div>
+        </div>
+        <div style="text-align: center; margin-top: 2rem; font-size: 0.85rem; opacity: 0.7;">
+            © 2025 DIVE PRO. ALL RIGHTS RESERVED
+        </div>
+    </footer>
+
+    <script>
+        // Create starfield
+        const starsContainer = document.getElementById('stars');
+        for (let i = 0; i < 100; i++) {
+            const star = document.createElement('div');
+            star.className = 'star';
+            star.style.left = Math.random() * 100 + '%';
+            star.style.top = Math.random() * 100 + '%';
+            star.style.animationDelay = Math.random() * 3 + 's';
+            starsContainer.appendChild(star);
+        }
+
+        // Three.js Scene Setup
+        const canvas = document.getElementById('canvas3d');
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+        
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        camera.position.z = 6;
+
+        // Create dive mask 3D model - LARGER AND MORE VISIBLE
+        const maskGeometry = new THREE.TorusGeometry(2, 0.5, 16, 100);
+        const maskMaterial = new THREE.MeshStandardMaterial({
+            color: 0xff6b35,
+            metalness: 0.7,
+            roughness: 0.3,
+            emissive: 0xff6b35,
+            emissiveIntensity: 0.2,
+        });
+        const mask = new THREE.Mesh(maskGeometry, maskMaterial);
+        mask.rotation.x = Math.PI / 6;
+        scene.add(mask);
+
+        // Add glass/lens effect - LARGER
+        const lensGeometry = new THREE.SphereGeometry(1.6, 32, 32, 0, Math.PI);
+        const lensMaterial = new THREE.MeshStandardMaterial({
+            color: 0x4a90e2,
+            metalness: 0.9,
+            roughness: 0.1,
+            transparent: true,
+            opacity: 0.4,
+            emissive: 0x4a90e2,
+            emissiveIntensity: 0.1,
+        });
+        const lens = new THREE.Mesh(lensGeometry, lensMaterial);
+        lens.rotation.y = Math.PI;
+        lens.position.z = 0.7;
+        scene.add(lens);
+
+        // Add frame details - LARGER
+        const frameGeometry = new THREE.TorusGeometry(2, 0.15, 8, 50);
+        const frameMaterial = new THREE.MeshStandardMaterial({
+            color: 0x2c3e50,
+            metalness: 0.8,
+            roughness: 0.2,
+        });
+        const frame = new THREE.Mesh(frameGeometry, frameMaterial);
+        frame.rotation.x = Math.PI / 6;
+        scene.add(frame);
+
+        // Lighting - BRIGHTER
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.8);
+        scene.add(ambientLight);
+        
+        const pointLight1 = new THREE.PointLight(0xff6b35, 3);
+        pointLight1.position.set(5, 5, 5);
+        scene.add(pointLight1);
+        
+        const pointLight2 = new THREE.PointLight(0x4a90e2, 3);
+        pointLight2.position.set(-5, -5, 5);
+        scene.add(pointLight2);
+
+        const pointLight3 = new THREE.PointLight(0xffffff, 2);
+        pointLight3.position.set(0, 0, 10);
+        scene.add(pointLight3);
+
+        // Group all objects
+        const group = new THREE.Group();
+        group.add(mask);
+        group.add(lens);
+        group.add(frame);
+        scene.add(group);
+        
+        group.position.x = 2;
+
+        // GSAP ScrollTrigger Setup
+        gsap.registerPlugin(ScrollTrigger);
+
+        // Horizontal movement timeline
+        const tl = gsap.timeline({
+            scrollTrigger: {
+                trigger: 'body',
+                start: 'top top',
+                end: 'bottom bottom',
+                scrub: 1,
+            }
+        });
+
+        tl.to(group.position, { x: 3, duration: 0.3 })
+          .to(group.position, { x: -3, duration: 1 })
+          .to(group.position, { x: 2, duration: 0.7 });
+
+        // Rotation animation
+        gsap.to(group.rotation, {
+            y: Math.PI * 2,
+            scrollTrigger: {
+                trigger: 'body',
+                start: 'top top',
+                end: 'bottom bottom',
+                scrub: 1,
+            }
+        });
+
+        // Scale animation
+        const tlScale = gsap.timeline({
+            scrollTrigger: {
+                trigger: 'body',
+                start: 'top top',
+                end: 'bottom bottom',
+                scrub: 1,
+            }
+        });
+
+        tlScale.to(group.scale, { x: 1.3, y: 1.3, z: 1.3, duration: 0.5 })
+               .to(group.scale, { x: 1, y: 1, z: 1, duration: 0.5 });
+
+        // Animation loop
+        function animate() {
+            requestAnimationFrame(animate);
+            group.rotation.x += 0.001;
+            group.position.y = Math.sin(Date.now() * 0.001) * 0.1;
+            renderer.render(scene, camera);
+        }
+        animate();
+
+        // Handle window resize
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+
+        // Smooth scroll
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
