@@ -498,7 +498,7 @@
     <section class="hero" id="hero">
         <div class="content">
             <h1 class="section-title">
-                THE ONLY <strong>DIVE COMPUTER</strong> THAT SEES YOU THROUGH
+                Dive Smarter. Sea Better. Stay Safer.
             </h1>
             <p class="section-description">
                 Your vital dive data & insights seamlessly projected, without breaking your flow.
@@ -769,15 +769,22 @@
           .to(group.position, { x: 2, duration: 0.7 });
 
         // Rotation animation
-        gsap.to(group.rotation, {
-            y: Math.PI * 2,
-            scrollTrigger: {
-                trigger: 'body',
-                start: 'top top',
-                end: 'bottom bottom',
-                scrub: 1,
-            }
-        });
+        // Scroll-driven rotation: enable only Y-axis rotation (no X-axis).
+        // Set `enableScrollRotateY` to true to allow rotation when scrolling.
+        // This keeps group.rotation.x untouched so the model won't tilt up/down.
+        const enableScrollRotateY = true;
+        if (enableScrollRotateY) {
+            gsap.to(group.rotation, {
+                // animate only the 'y' property
+                y: Math.PI * 2,
+                scrollTrigger: {
+                    trigger: 'body',
+                    start: 'top top',
+                    end: 'bottom bottom',
+                    scrub: 1,
+                }
+            });
+        }
 
         // Scale animation
         const tlScale = gsap.timeline({
@@ -795,7 +802,13 @@
         // Animation loop
         function animate() {
             requestAnimationFrame(animate);
-            group.rotation.x += 0.001;
+            // Remove continuous per-frame rotation so the model stays at its
+            // scripted orientation. If you want a subtle idle rotation, set
+            // `idleRotate` to true and tweak the values.
+            const idleRotate = false;
+            if (idleRotate) {
+                group.rotation.x += 0.001;
+            }
             group.position.y = Math.sin(Date.now() * 0.001) * 0.1;
             renderer.render(scene, camera);
         }
