@@ -205,6 +205,21 @@
             position: relative;
         }
 
+        .hero .content {
+            margin-right: auto;
+            text-align: left;
+        }
+
+        .section2 .content {
+            margin-left: auto;
+            text-align: right;
+        }
+
+        .section3 .content {
+            margin-right: auto;
+            text-align: left;
+        }
+
         .section-title {
             font-size: clamp(2.5rem, 5vw, 4rem);
             font-weight: 300;
@@ -215,6 +230,27 @@
 
         .section-title strong {
             font-weight: 700;
+        }
+
+        .hero-title {
+            font-weight: 700;
+            letter-spacing: 0.008em;
+            font-size: clamp(1.8rem, 3.5vw, 3rem);
+        }
+
+        .hero-title .hero-line {
+            display: block;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.09em;
+            margin-bottom: 0.3rem;
+        }
+
+        .hero-description {
+            font-weight: 500;
+            letter-spacing: 0.045em;
+            text-transform: uppercase;
+            font-size: clamp(0.7rem, 1.4vw, 0.9rem);
         }
 
         .section-description {
@@ -943,10 +979,12 @@
 
     <section class="hero" id="hero">
         <div class="content">
-            <h1 class="section-title">
-                Dive Smarter. Sea Better. Stay Safer.
+            <h1 class="section-title hero-title">
+                <span class="hero-line">Dive Smarter.</span>
+                <span class="hero-line">Sea Better.</span>
+                <span class="hero-line">Stay Safer.</span>
             </h1>
-            <p class="section-description">
+            <p class="section-description hero-description">
                 Your vital dive data & insights seamlessly projected, without breaking your flow.
             </p>
         </div>
@@ -974,7 +1012,7 @@
         </div>
     </section>
 
-    <section class="section2">
+    <section class="section2" id="section4">
         <div class="content">
             <h2 class="section-title">
                 <strong>CONNECTED DIVE ECOSYSTEM</strong>
@@ -1236,55 +1274,106 @@
             }
         );
 
-        group.position.set(2, 0, 0);
+        group.position.set(3.5, 0, 0);
 
         // GSAP ScrollTrigger Setup
         gsap.registerPlugin(ScrollTrigger);
 
-        // Horizontal movement timeline
-        const tl = gsap.timeline({
+        // Section based animation states for smooth alignment
+        const sectionStates = [
+            {
+                trigger: '#hero',
+                position: { x: 2.2, y: 0.12 },
+                scale: 1.16,
+            },
+            {
+                trigger: '#section2',
+                position: { x: -3.45, y: -0.05 },
+                scale: 1.08,
+            },
+            {
+                trigger: '#section3',
+                position: { x: 3.3, y: 0.08 },
+                scale: 1.12,
+            },
+            {
+                trigger: '#section4',
+                position: { x: -3.1, y: 0 },
+                scale: 1.05,
+            },
+        ];
+
+        // Apply initial state immediately
+        gsap.set(group.position, sectionStates[0].position);
+        gsap.set(group.scale, {
+            x: sectionStates[0].scale,
+            y: sectionStates[0].scale,
+            z: sectionStates[0].scale,
+        });
+
+        // Build a master timeline that spans all sections for buttery transitions
+        const modelTimeline = gsap.timeline({
+            defaults: { duration: 1, ease: 'power3.inOut' },
+            scrollTrigger: {
+                trigger: '#hero',
+                start: 'top top',
+                endTrigger: '#section4',
+                end: 'bottom bottom',
+                scrub: 1.4,
+                snap: {
+                    snapTo: sectionStates.map((_, index) => index / (sectionStates.length - 1)),
+                    duration: { min: 0.2, max: 0.6 },
+                    ease: 'power1.inOut',
+                },
+            },
+        });
+
+        sectionStates.slice(1).forEach((state) => {
+            modelTimeline
+                .to(group.position, {
+                    x: state.position.x,
+                    y: state.position.y,
+                })
+                .to(
+                    group.scale,
+                    {
+                        x: state.scale,
+                        y: state.scale,
+                        z: state.scale,
+                        ease: 'power2.inOut',
+                    },
+                    '<'
+                );
+        });
+
+        // Smooth rotation animation with easing
+        gsap.to(group.rotation, {
+            y: Math.PI * 2,
             scrollTrigger: {
                 trigger: 'body',
                 start: 'top top',
                 end: 'bottom bottom',
-                scrub: 1,
-            }
+                scrub: 2,
+            },
+            ease: "none"
         });
 
-        tl.to(group.position, { x: 3, duration: 0.3 })
-          .to(group.position, { x: -3, duration: 1 })
-          .to(group.position, { x: 2, duration: 0.7 });
+        // Subtle idle float using requestAnimationFrame for micro-motion
+        const floatConfig = {
+            strength: 0.12,
+            speed: 0.6,
+        };
 
-        // Rotation animation
-        // Scroll-driven rotation: enable only Y-axis rotation (no X-axis).
-        // Set `enableScrollRotateY` to true to allow rotation when scrolling.
-        // This keeps group.rotation.x untouched so the model won't tilt up/down.
-        const enableScrollRotateY = true;
-        if (enableScrollRotateY) {
-            gsap.to(group.rotation, {
-                // animate only the 'y' property
-                y: Math.PI * 2,
-                scrollTrigger: {
-                    trigger: 'body',
-                    start: 'top top',
-                    end: 'bottom bottom',
-                    scrub: 1,
-                }
-            });
+        let floatStartTime = performance.now();
+
+        function updateFloat() {
+            const elapsed = (performance.now() - floatStartTime) / 1000;
+            const offset = Math.sin(elapsed * floatConfig.speed) * floatConfig.strength;
+            group.position.z = offset;
+            requestAnimationFrame(updateFloat);
         }
 
-        // Scale animation
-        const tlScale = gsap.timeline({
-            scrollTrigger: {
-                trigger: 'body',
-                start: 'top top',
-                end: 'bottom bottom',
-                scrub: 1,
-            }
-        });
-
-        tlScale.to(group.scale, { x: 1.3, y: 1.3, z: 1.3, duration: 0.5 })
-               .to(group.scale, { x: 1, y: 1, z: 1, duration: 0.5 });
+        updateFloat();
 
         // Animation loop
         function animate() {
