@@ -188,15 +188,15 @@
         }
 
         .hero {
-            background: linear-gradient(180deg, rgba(10, 22, 40, 0.7) 0%, rgba(26, 47, 77, 0.7) 100%);
+            background: linear-gradient(180deg, rgba(10, 22, 40, 0.5) 0%, rgba(26, 47, 77, 0.5) 100%);
         }
 
         .section2 {
-            background: linear-gradient(180deg, rgba(26, 47, 77, 0.7) 0%, rgba(42, 74, 109, 0.7) 100%);
+            background: linear-gradient(180deg, rgba(26, 47, 77, 0.5) 0%, rgba(42, 74, 109, 0.5) 100%);
         }
 
         .section3 {
-            background: linear-gradient(180deg, rgba(42, 74, 109, 0.7) 0%, rgba(26, 58, 93, 0.7) 100%);
+            background: linear-gradient(180deg, rgba(42, 74, 109, 0.5) 0%, rgba(26, 58, 93, 0.5) 100%);
         }
 
         .content {
@@ -416,7 +416,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.3);
+            background: rgba(0, 0, 0, 0.15);
             z-index: 1;
         }
 
@@ -507,7 +507,7 @@
 
         .footer-section:nth-child(2) {
             justify-self: center;
-            text-align: center;
+            text-align: left;
             grid-column: 2;
         }
 
@@ -581,7 +581,7 @@
         }
 
         .footer-section:nth-child(2) ul {
-            text-align: center;
+            text-align: left;
         }
 
         .footer-section:nth-child(3) ul {
@@ -1063,6 +1063,12 @@
                     if (child.isMesh) {
                         child.castShadow = false;
                         child.receiveShadow = false;
+                        // Apply black material to all meshes
+                        child.material = new THREE.MeshStandardMaterial({
+                            color: 0x000000,
+                            metalness: 0.1,
+                            roughness: 0.3
+                        });
                     }
                 });
 
@@ -1106,7 +1112,7 @@
             }
         );
 
-        group.position.set(1, 0, 0);
+        group.position.set(2, 0, 0);
 
         // GSAP ScrollTrigger Setup
         gsap.registerPlugin(ScrollTrigger);
