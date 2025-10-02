@@ -9,15 +9,18 @@
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
-    <style>
+   <link href="https://fonts.cdnfonts.com/css/neue-haas-grotesk-display-pro" rel="stylesheet">
+                
+   <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            font-family: 'Neue Haas Grotesk Display Pro', sans-serif;
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            font-family: 'Neue Haas Grotesk Display Pro', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
             background: #000;
             color: #fff;
             overflow-x: hidden;
@@ -147,9 +150,11 @@
         }
 
         .feature-icon {
-            font-size: 3rem;
-            color: #ff6b35;
-            margin-bottom: 1.5rem;
+            width: 60px;
+            height: 60px;
+            margin: 0 auto 1.5rem;
+            display: block;
+            object-fit: contain;
         }
 
         .feature-title {
@@ -188,13 +193,20 @@
             display: flex;
             align-items: center;
             padding: 5rem 5%;
+            position: relative;
+            z-index: 20;
+        }
+
+        .app-section #canvas3d {
+            display: none !important;
+            visibility: hidden !important;
         }
 
         .app-content {
             display: flex;
             align-items: center;
             gap: 5rem;
-            max-width: 1400px;
+            width: 100%;
             margin: 0 auto;
         }
 
@@ -249,10 +261,15 @@
         }
 
         .app-phones {
-            flex: 1;
+            flex: 2;
             display: flex;
-            gap: 2rem;
             justify-content: center;
+            align-items: center;
+            background-image: url('assets/mock.png');
+            background-size: 150%;
+            background-repeat: no-repeat;
+            background-position: center;
+            min-height: 900px;
         }
 
         .phone-mockup {
@@ -411,11 +428,10 @@
         }
 
         .qr-icon {
-            width: 50px;
-            height: 50px;
-            background: #1a2f4d;
-            border-radius: 8px;
+            width: 120px;
+            height: 120px;
             margin-bottom: 1rem;
+            object-fit: contain;
         }
 
         /* Starfield */
@@ -539,58 +555,46 @@
         </div>
     </section>
 
-    <section class="features-section" id="features">
+        <section class="features-section" id="features">
         <div class="features-grid">
             <div class="feature-item">
-                <div class="feature-icon">❤️</div>
+                <img src="assets/vitals.png" alt="Vitals" class="feature-icon">
                 <h3 class="feature-title">Vitals</h3>
                 <p class="feature-desc">Heart rate and O₂ saturation, Heart Rate Variability (HRV), Breathing Rate & more</p>
             </div>
             <div class="feature-item">
-                <div class="feature-icon">📊</div>
+                <img src="assets/stats.png" alt="Dive Computer Data" class="feature-icon">
                 <h3 class="feature-title">Dive Computer Data</h3>
                 <p class="feature-desc">Depth, time, temperature, ascent speed, NDL awareness & more - all integrated into a single Augmented Reality view</p>
             </div>
             <div class="feature-item">
-                <div class="feature-icon">👓</div>
+                <img src="assets/tech-specs.png" alt="Tech Specs" class="feature-icon">
                 <h3 class="feature-title">Tech Specs</h3>
                 <p class="feature-desc">eSIM, GPS, Bluetooth, hours of continuous dive time and more</p>
             </div>
             <div class="feature-item">
-                <div class="feature-icon">📦</div>
+                <img src="assets/box.png" alt="What's in the box" class="feature-icon">
                 <h3 class="feature-title">What's in the box</h3>
                 <p class="feature-desc">divePRO AR Dive Computer Mask, Magnetic USB charging cable, Premium neoprene mask strap</p>
             </div>
         </div>
         <center>
-            <a href="#" class="view-all-btn">View all features</a>
+            <a href="#" class="view-all-btn">View All Features</a>
         </center>
     </section>
 
     <section class="app-section">
         <div class="app-content">
             <div class="app-text">
-                <div class="qr-icon"></div>
+                <img src="assets/QR Code.png" alt="QR Code" class="qr-icon">
                 <h2>TRACK & ANALYZE YOUR DIVES</h2>
                 <div class="app-buttons">
-                    <a href="#" class="btn-primary">Download the App 📱</a>
+                    <a href="#" class="btn-primary">Download the App <img src="assets/download.png" alt="Download" style="width: 20px; height: 20px;"></a>
                     <a href="#" class="btn-secondary">View more</a>
                 </div>
             </div>
             <div class="app-phones">
-                <div class="phone-mockup">
-                    <div class="phone-screen">
-                        <p style="margin-bottom: 1rem; opacity: 0.8;">Your metrics in a single view</p>
-                        <p style="font-size: 0.7rem; opacity: 0.6;">Lorem ipsum is simply dummy text of the printing and typesetting industry.</p>
-                    </div>
-                </div>
-                <div class="phone-mockup">
-                    <div class="phone-screen">
-                        <p style="margin-bottom: 1rem; opacity: 0.8;">Your activity</p>
-                        <p style="font-size: 2rem; font-weight: 700; margin: 1rem 0;">03:48:58</p>
-                        <p style="font-size: 0.7rem; opacity: 0.6;">Dive minutes</p>
-                    </div>
-                </div>
+                <!-- Background image will display here -->
             </div>
         </div>
     </section>
@@ -820,6 +824,50 @@
             camera.updateProjectionMatrix();
             renderer.setSize(window.innerWidth, window.innerHeight);
         });
+
+        // Hide/show 3D canvas based on scroll position
+        function toggleCanvasVisibility() {
+            const appSection = document.querySelector('.app-section');
+            const ctaSection = document.querySelector('.cta-section');
+            const footer = document.querySelector('footer');
+            const canvas = document.getElementById('canvas3d');
+            
+            if (canvas) {
+                let shouldHide = false;
+                
+                // Check if in app section
+                if (appSection) {
+                    const appSectionRect = appSection.getBoundingClientRect();
+                    const isInAppSection = appSectionRect.top <= window.innerHeight && appSectionRect.bottom >= 0;
+                    if (isInAppSection) shouldHide = true;
+                }
+                
+                // Check if in CTA section (SEA BEYOND)
+                if (ctaSection) {
+                    const ctaSectionRect = ctaSection.getBoundingClientRect();
+                    const isInCtaSection = ctaSectionRect.top <= window.innerHeight && ctaSectionRect.bottom >= 0;
+                    if (isInCtaSection) shouldHide = true;
+                }
+                
+                // Check if in footer
+                if (footer) {
+                    const footerRect = footer.getBoundingClientRect();
+                    const isInFooter = footerRect.top <= window.innerHeight && footerRect.bottom >= 0;
+                    if (isInFooter) shouldHide = true;
+                }
+                
+                if (shouldHide) {
+                    canvas.style.display = 'none';
+                } else {
+                    canvas.style.display = 'block';
+                }
+            }
+        }
+
+        // Check visibility on scroll and load
+        window.addEventListener('scroll', toggleCanvasVisibility);
+        window.addEventListener('load', toggleCanvasVisibility);
+        toggleCanvasVisibility(); // Initial check
 
         // Smooth scroll
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
