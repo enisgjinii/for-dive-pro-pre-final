@@ -42,38 +42,139 @@
             position: fixed;
             top: 0;
             width: 100%;
-            padding: 2rem 5%;
+            padding: 1.5rem 3rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
             z-index: 1000;
             backdrop-filter: blur(20px);
-            background: rgba(10, 22, 40, 0.8);
+            background: rgba(5, 15, 30, 0.6);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .nav-left {
+            display: flex;
+            align-items: center;
+            gap: 3rem;
         }
 
         .logo {
-            height: 40px;
+            height: 32px;
             width: auto;
         }
 
         .nav-links {
             display: flex;
-            gap: 3rem;
+            gap: 2.5rem;
             list-style: none;
+            align-items: center;
         }
 
         .nav-links a {
-            color: rgba(255, 255, 255, 0.8);
+            color: rgba(255, 255, 255, 0.9);
             text-decoration: none;
-            font-size: 0.9rem;
-            transition: color 0.3s;
-            letter-spacing: 0.1em;
+            font-size: 0.875rem;
+            transition: all 0.3s ease;
+            letter-spacing: 0.05em;
             text-transform: uppercase;
-            font-weight: 500;
+            font-weight: 400;
+            position: relative;
         }
 
         .nav-links a:hover {
-            color: #fff;
+            color: #ffffff;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0;
+            height: 1px;
+            background: #ffffff;
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .nav-icons {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .nav-icon-circle {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .nav-icon-circle:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .nav-icon-circle.has-notification::after {
+            content: '';
+            position: absolute;
+            top: 6px;
+            right: 6px;
+            width: 6px;
+            height: 6px;
+            background: #ff6b35;
+            border-radius: 50%;
+            border: 2px solid rgba(5, 15, 30, 0.8);
+        }
+
+        .nav-icon-circle {
+            position: relative;
+        }
+
+        .nav-icon {
+            width: 16px;
+            height: 16px;
+            opacity: 0.9;
+            filter: brightness(0) invert(1);
+            transition: all 0.3s ease;
+        }
+
+        .preorder-btn {
+            background: rgba(255, 255, 255, 0.1);
+            color: #ffffff;
+            text-decoration: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 30px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            letter-spacing: 0.05em;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            backdrop-filter: blur(10px);
+        }
+
+        .preorder-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
         }
 
         /* Section Container */
@@ -500,15 +601,35 @@
     <div class="stars" id="stars"></div>
 
     <nav>
-        <!-- Logo image: Group 3875.svg -->
-        <img src="Group 3875.svg" alt="divePRO+ Logo" class="logo">
-        <ul class="nav-links">
-            <li><a href="#features">Features</a></li>
-            <li><a href="#application">Application</a></li>
-            <li><a href="#about">About Us</a></li>
-            <li><a href="#blog">Blog</a></li>
-            <li><a href="#contact">Contact</a></li>
-        </ul>
+        <div class="nav-left">
+            <!-- Logo image: Group 3875.svg -->
+            <img src="Group 3875.svg" alt="divePRO+ Logo" class="logo">
+            <ul class="nav-links">
+                <li><a href="#features">Features</a></li>
+                <li><a href="#application">Application</a></li>
+                <li><a href="#about">About Us</a></li>
+                <li><a href="#blog">Blog</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </div>
+        <div class="nav-right">
+            <div class="nav-icons">
+                <!-- Profile icon circle with notification -->
+                <div class="nav-icon-circle has-notification">
+                    <img src="assets/Vector2.svg" alt="Profile" class="nav-icon">
+                </div>
+                <!-- Location/Mark icon circle -->
+                <div class="nav-icon-circle">
+                    <img src="assets/Vector.svg" alt="Location" class="nav-icon">
+                </div>
+            </div>
+            <a href="#preorder" class="preorder-btn">
+                Preorder now
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+                    <path d="M1 8h12m0 0L9 4m4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                </svg>
+            </a>
+        </div>
     </nav>
 
     <section class="hero" id="hero">
