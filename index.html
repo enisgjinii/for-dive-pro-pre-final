@@ -395,32 +395,83 @@
 
         /* CTA Section */
         .cta-section {
-            background: linear-gradient(135deg, rgba(26, 58, 93, 0.8) 0%, rgba(42, 90, 141, 0.8) 100%);
-            min-height: 70vh;
+            background-image: url('assets/AdobeStock_951313034.png');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            height: 749px;
             display: flex;
             align-items: center;
             justify-content: center;
             text-align: center;
-            padding: 5rem 5%;
+            padding: 0;
             position: relative;
             overflow: hidden;
+        }
+
+        .cta-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.3);
+            z-index: 1;
+        }
+
+        .cta-content {
+            position: relative;
+            z-index: 10;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #cta-canvas3d {
+            width: 1100px;
+            height: 1100px;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 11;
+        }
+
+        .cta-text-overlay {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 20;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 2rem;
         }
 
         .cta-content h2 {
             font-size: clamp(3rem, 7vw, 6rem);
             font-weight: 700;
-            margin-bottom: 2rem;
+            margin: 0;
             letter-spacing: -0.02em;
+            text-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
         }
 
         .cta-btn {
-            padding: 1.2rem 3rem;
-            background: rgba(0, 0, 0, 0.6);
-            color: #fff;
+            padding: 0.75rem 1.5rem;
+            background: rgba(255, 255, 255, 0.1);
+            color: #ffffff;
             text-decoration: none;
-            border-radius: 50px;
-            font-weight: 600;
-            transition: all 0.3s;
+            border-radius: 30px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            letter-spacing: 0.05em;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.2);
             display: inline-flex;
             align-items: center;
             gap: 0.5rem;
@@ -428,31 +479,51 @@
         }
 
         .cta-btn:hover {
-            background: rgba(0, 0, 0, 0.8);
+            background: rgba(255, 255, 255, 0.2);
             transform: translateY(-2px);
         }
 
         /* Footer */
         footer {
             background: #f5f5f5;
-            color: #1a2f4d;
-            padding: 5rem 5% 2rem;
+            color: #0a1628;
+            padding: 4rem 5% 3rem;
         }
 
         .footer-content {
-            max-width: 1400px;
-            margin: 0 auto;
+            width: 100%;
             display: grid;
             grid-template-columns: 1fr 1fr 1fr;
-            gap: 4rem;
-            margin-bottom: 4rem;
+            gap: 8rem;
+            margin-bottom: 3rem;
+            align-items: start;
+        }
+
+        .footer-brand {
+            justify-self: start;
+            text-align: left;
+            grid-column: 1;
+        }
+
+        .footer-section:nth-child(2) {
+            justify-self: center;
+            text-align: center;
+            grid-column: 2;
+        }
+
+        .footer-section:nth-child(3) {
+            justify-self: end;
+            text-align: right;
+            grid-column: 3;
         }
 
         .footer-brand h3 {
-            font-size: 2rem;
+            font-size: 1.5rem;
             font-weight: 700;
             margin-bottom: 2rem;
             color: #0a1628;
+            line-height: 1.3;
+            max-width: 280px;
         }
 
         .social-links {
@@ -468,19 +539,25 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            color: #ff6b35;
             text-decoration: none;
             transition: all 0.3s;
-            font-size: 1.2rem;
+            overflow: hidden;
+        }
+
+        .social-link img {
+            width: 20px;
+            height: 20px;
+            object-fit: contain;
+            transition: all 0.3s;
         }
 
         .social-link:hover {
             background: #ff6b35;
-            color: #fff;
+            transform: translateY(-2px);
         }
 
         .footer-section h4 {
-            font-size: 0.85rem;
+            font-size: 0.75rem;
             text-transform: uppercase;
             letter-spacing: 0.1em;
             margin-bottom: 1.5rem;
@@ -488,18 +565,34 @@
             font-weight: 600;
         }
 
+        .footer-section h4::before {
+            content: '■ ';
+            margin-right: 0.5rem;
+        }
+
         .footer-section ul {
             list-style: none;
+            padding: 0;
+            margin: 0;
         }
 
         .footer-section ul li {
             margin-bottom: 0.8rem;
         }
 
+        .footer-section:nth-child(2) ul {
+            text-align: center;
+        }
+
+        .footer-section:nth-child(3) ul {
+            text-align: right;
+        }
+
         .footer-section a {
-            color: #1a2f4d;
+            color: #0a1628;
             text-decoration: none;
             transition: color 0.3s;
+            font-size: 0.95rem;
         }
 
         .footer-section a:hover {
@@ -507,20 +600,44 @@
         }
 
         .footer-bottom {
-            border-top: 1px solid #ddd;
-            padding-top: 2rem;
+            padding-top: 2.5rem;
+            margin-top: 2.5rem;
             display: flex;
             justify-content: space-between;
+            align-items: flex-start;
             flex-wrap: wrap;
             gap: 2rem;
-            font-size: 0.9rem;
-            color: #1a2f4d;
+            font-size: 0.85rem;
+            color: #0a1628;
         }
 
         .footer-contact {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 8rem;
+            width: 100%;
+            align-items: center;
+        }
+
+        .footer-contact-item {
             display: flex;
-            gap: 3rem;
-            flex-wrap: wrap;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .footer-contact-left {
+            justify-self: start;
+            text-align: left;
+        }
+
+        .footer-contact-center {
+            justify-self: center;
+            text-align: center;
+        }
+
+        .footer-contact-right {
+            justify-self: end;
+            text-align: right;
         }
 
         .footer-legal {
@@ -528,11 +645,88 @@
             gap: 2rem;
         }
 
+        .footer-legal a {
+            color: #0a1628;
+            text-decoration: none;
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            letter-spacing: 0.05em;
+            transition: color 0.3s;
+        }
+
+        .footer-legal a:hover {
+            color: #ff6b35;
+        }
+
+        .footer-copyright {
+            text-align: center;
+            margin-top: 2rem;
+            font-size: 0.75rem;
+            color: #0a1628;
+        }
+
         .qr-icon {
             width: 120px;
             height: 120px;
             margin-bottom: 1rem;
             object-fit: contain;
+        }
+
+        .footer-designer {
+            text-align: right;
+            font-size: 0.75rem;
+            color: #0a1628;
+        }
+
+        .footer-legal-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 8rem;
+            width: 100%;
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 1px solid #ddd;
+            align-items: center;
+        }
+
+        .footer-legal-links {
+            display: flex;
+            gap: 2rem;
+            font-size: 0.75rem;
+            grid-column: 1;
+            justify-self: start;
+        }
+
+        .footer-legal-links a {
+            color: #0a1628;
+            text-decoration: none;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            transition: color 0.3s;
+        }
+
+        .footer-legal-links a:hover {
+            color: #ff6b35;
+        }
+
+        .footer-copyright-center {
+            grid-column: 2;
+            justify-self: center;
+            text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            font-size: 0.75rem;
+            color: #0a1628;
+        }
+
+        .footer-designer-right {
+            grid-column: 3;
+            justify-self: end;
+            text-align: right;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            font-size: 0.75rem;
+            color: #0a1628;
         }
 
         /* Starfield */
@@ -592,6 +786,23 @@
 
             .footer-bottom {
                 flex-direction: column;
+            }
+
+            .cta-section {
+                height: 500px;
+            }
+
+            #cta-canvas3d {
+                width: 700px;
+                height: 700px;
+            }
+
+            .cta-content h2 {
+                font-size: 2.5rem;
+            }
+
+            .cta-text-overlay {
+                gap: 1rem;
             }
         }
     </style>
@@ -722,8 +933,16 @@
 
     <section class="cta-section">
         <div class="cta-content">
-            <h2>SEA BEYOND</h2>
-            <a href="#" class="cta-btn">Preorder now →</a>
+            <canvas id="cta-canvas3d"></canvas>
+            <div class="cta-text-overlay">
+                <h2>SEA BEYOND</h2>
+                <a href="#" class="cta-btn">
+                    Preorder now
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+                        <path d="M1 8h12m0 0L9 4m4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                    </svg>
+                </a>
+            </div>
         </div>
     </section>
 
@@ -732,21 +951,29 @@
             <div class="footer-brand">
                 <h3>THE FIRST DIVE AUGMENTED REALITY COMPUTER</h3>
                 <div class="social-links">
-                    <a href="#" class="social-link">📷</a>
-                    <a href="#" class="social-link">💼</a>
-                    <a href="#" class="social-link">✕</a>
-                    <a href="#" class="social-link">▶</a>
+                    <a href="#" class="social-link">
+                        <img src="assets/instagram-icon.png" alt="Instagram">
+                    </a>
+                    <a href="#" class="social-link">
+                        <img src="assets/linkedln-icon.png" alt="LinkedIn">
+                    </a>
+                    <a href="#" class="social-link">
+                        <img src="assets/x-icon.png" alt="X (Twitter)">
+                    </a>
+                    <a href="#" class="social-link">
+                        <img src="assets/youtube-icon.png" alt="YouTube">
+                    </a>
                 </div>
             </div>
             <div class="footer-section">
-                <h4>■ OUR COMPANY</h4>
+                <h4>OUR COMPANY</h4>
                 <ul>
                     <li><a href="#about">About us</a></li>
                     <li><a href="#sustainability">Sustainability & Social Responsibility</a></li>
                 </ul>
             </div>
             <div class="footer-section">
-                <h4>■ CUSTOMER SERVICE</h4>
+                <h4>CUSTOMER SERVICE</h4>
                 <ul>
                     <li><a href="#support">Support Centre</a></li>
                     <li><a href="#order">Order Support</a></li>
@@ -759,17 +986,22 @@
         </div>
         <div class="footer-bottom">
             <div class="footer-contact">
-                <div>✈ Dionisiou Aeropagitou 21, 31200 Athens Greece</div>
-                <div>✉ adress@addressdivepro.com</div>
-                <div>☎ +30 2112244566</div>
+                <div class="footer-contact-item footer-contact-left">▷ Dionisiou Aeropagitou 21, 31200 Athens Greece</div>
+                <div class="footer-contact-item footer-contact-center">✉ adress@addressdivepro.com</div>
+                <div class="footer-contact-item footer-contact-right">📞 +30 2112244566</div>
             </div>
-            <div class="footer-legal">
+        </div>
+        <div class="footer-legal-section">
+            <div class="footer-legal-links">
                 <a href="#privacy">PRIVACY AND TERMS</a>
                 <a href="#cookies">COOKIES PREFERENCES</a>
             </div>
-        </div>
-        <div style="text-align: center; margin-top: 2rem; font-size: 0.85rem; opacity: 0.7;">
-            © 2025 DIVE PRO. ALL RIGHTS RESERVED
+            <div class="footer-copyright-center">
+                © 2025 DIVE PRO. ALL RIGHTS RESERVED
+            </div>
+            <div class="footer-designer-right">
+                DESIGNED BY 2VOL.K. DEVELOPED BY ___
+            </div>
         </div>
     </footer>
 
@@ -1000,6 +1232,115 @@
                 }
             });
         });
+
+        // CTA Section - Static 3D Model
+        const ctaCanvas = document.getElementById('cta-canvas3d');
+        const ctaScene = new THREE.Scene();
+        const ctaCamera = new THREE.PerspectiveCamera(75, 1, 0.1, 1000);
+        const ctaRenderer = new THREE.WebGLRenderer({ canvas: ctaCanvas, alpha: true, antialias: true });
+        
+        ctaRenderer.setSize(500, 500);
+        ctaRenderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        ctaCamera.position.z = 6;
+
+        // Lighting for CTA model
+        const ctaAmbientLight = new THREE.AmbientLight(0xffffff, 0.8);
+        ctaScene.add(ctaAmbientLight);
+        
+        const ctaPointLight1 = new THREE.PointLight(0xff6b35, 3);
+        ctaPointLight1.position.set(5, 5, 5);
+        ctaScene.add(ctaPointLight1);
+        
+        const ctaPointLight2 = new THREE.PointLight(0x4a90e2, 3);
+        ctaPointLight2.position.set(-5, -5, 5);
+        ctaScene.add(ctaPointLight2);
+
+        const ctaPointLight3 = new THREE.PointLight(0xffffff, 2);
+        ctaPointLight3.position.set(0, 0, 10);
+        ctaScene.add(ctaPointLight3);
+
+        // Group for CTA model
+        const ctaGroup = new THREE.Group();
+        ctaScene.add(ctaGroup);
+        
+        const ctaLoader = new THREE.GLTFLoader();
+        if (window.MeshoptDecoder) {
+            ctaLoader.setMeshoptDecoder(window.MeshoptDecoder);
+        }
+        
+        const ctaTargetModelSize = 5.5;
+        ctaLoader.load(
+            '3D_Model.glb',
+            (gltf) => {
+                const model = gltf.scene;
+
+                model.traverse((child) => {
+                    if (child.isMesh) {
+                        child.castShadow = false;
+                        child.receiveShadow = false;
+                        // Apply black material to all meshes
+                        child.material = new THREE.MeshStandardMaterial({
+                            color: 0x000000,
+                            metalness: 0.1,
+                            roughness: 0.3
+                        });
+                    }
+                });
+
+                model.updateMatrixWorld(true, true);
+
+                const bounds = new THREE.Box3();
+                const scratchBox = new THREE.Box3();
+                model.traverse((child) => {
+                    if (child.isMesh && child.geometry) {
+                        if (!child.geometry.boundingBox) {
+                            child.geometry.computeBoundingBox();
+                        }
+                        scratchBox.copy(child.geometry.boundingBox);
+                        scratchBox.applyMatrix4(child.matrixWorld);
+                        bounds.union(scratchBox);
+                    }
+                });
+
+                if (bounds.isEmpty()) {
+                    bounds.setFromObject(model);
+                }
+
+                const center = bounds.getCenter(new THREE.Vector3());
+                const size = bounds.getSize(new THREE.Vector3());
+
+                model.position.sub(center);
+
+                const pivot = new THREE.Group();
+                pivot.add(model);
+
+                const maxAxis = Math.max(size.x, size.y, size.z) || 1;
+                const scale = ctaTargetModelSize / maxAxis;
+                pivot.scale.setScalar(scale);
+
+                ctaGroup.add(pivot);
+            },
+            undefined,
+            (error) => {
+                console.error('Error loading CTA 3D model:', error);
+            }
+        );
+
+        // Static render for CTA section (no animation)
+        function animateCTA() {
+            requestAnimationFrame(animateCTA);
+            ctaRenderer.render(ctaScene, ctaCamera);
+        }
+        animateCTA();
+
+        // Handle window resize for CTA canvas
+        function updateCTACanvasSize() {
+            const size = window.innerWidth <= 768 ? 700 : 1100;
+            ctaRenderer.setSize(size, size);
+        }
+        
+        window.addEventListener('resize', updateCTACanvasSize);
+        updateCTACanvasSize();
     </script>
 </body>
 </html>
