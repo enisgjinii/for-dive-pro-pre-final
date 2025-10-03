@@ -106,6 +106,47 @@
             gap: 1rem;
         }
 
+        /* Mobile menu toggle (hamburger) */
+        .mobile-menu-toggle {
+            display: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            margin-left: auto;
+        }
+
+        .mobile-menu-toggle:hover { background: rgba(255, 255, 255, 0.2); transform: translateY(-2px); }
+
+        .mobile-menu-toggle .bar {
+            width: 20px;
+            height: 2px;
+            background: #fff;
+            display: block;
+            position: relative;
+            transition: transform 0.3s ease, opacity 0.3s ease;
+        }
+        .mobile-menu-toggle .bar::before, .mobile-menu-toggle .bar::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            width: 20px;
+            height: 2px;
+            background: #fff;
+            transition: transform 0.3s ease, opacity 0.3s ease;
+        }
+        .mobile-menu-toggle .bar::before { top: -6px; }
+        .mobile-menu-toggle .bar::after { top: 6px; }
+        .mobile-menu-toggle.active .bar { background: transparent; }
+        .mobile-menu-toggle.active .bar::before { transform: translateY(6px) rotate(45deg); }
+        .mobile-menu-toggle.active .bar::after { transform: translateY(-6px) rotate(-45deg); }
+
         .nav-icons {
             display: flex;
             align-items: center;
@@ -511,11 +552,7 @@
             /* box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3); */
         }
 
-        .story-card:hover .play-button {
-            /* background: rgba(255, 255, 255, 1); */
-            /* transform: scale(1.1);
-            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4); */
-        }
+        /* removed empty ruleset for .story-card:hover .play-button to satisfy linter */
 
         .play-button img {
             width: 30px;
@@ -992,33 +1029,63 @@
 
         /* Responsive */
         @media (max-width: 1024px) {
-            .app-content {
-                flex-direction: column;
-            }
+            body { font-size: 16px; }
+            nav { padding: 1.2rem 5%; }
+            .nav-links { display: none; }
+            .mobile-menu-toggle { display: flex; }
+            .mobile-menu { display: block; }
 
-            .footer-content {
-                grid-template-columns: 1fr;
-                gap: 3rem;
+            .app-content { flex-direction: column; gap: 4rem; }
+            .content { max-width: 90%; padding: 0 2rem; }
+            .hero .content, .section2 .content, .section3 .content { margin: 0 auto; text-align: center; }
+            section { padding: 2rem 5%; min-height: 90vh; }
+            .hero { padding-top: 100px; min-height: 100vh; }
+
+            .app-phones { min-height: 600px; background-size: contain; }
+
+            .footer-content { grid-template-columns: 1fr; gap: 3rem; }
+            .footer-section:nth-child(2), .footer-section:nth-child(3) { justify-self: start; text-align: left; }
+            .footer-contact { grid-template-columns: 1fr; gap: 1rem; }
+            .footer-contact-left, .footer-contact-center, .footer-contact-right { justify-self: start; text-align: left; }
+
+            .footer-legal-section { 
+                grid-template-columns: 1fr; 
+                gap: 1.5rem; 
+                text-align: center;
+                padding: 2rem 0;
             }
+            .footer-legal-links { 
+                justify-self: center; 
+                justify-content: center;
+                flex-wrap: wrap;
+                gap: 1rem;
+            }
+            .footer-copyright-center { justify-self: center; }
+            .footer-designer-right { justify-self: center; text-align: center; }
         }
 
         @media (max-width: 768px) {
             nav {
-                padding: 1.5rem 5%;
+                padding: 1rem 4%;
             }
 
-            .nav-links {
-                display: none;
-            }
+            .nav-links { display: none; }
 
             .features-grid {
                 grid-template-columns: 1fr;
-                gap: 3rem;
+                gap: 2.5rem;
+                padding: 0 1rem;
             }
 
-            .app-phones {
-                flex-direction: column;
-            }
+            .preorder-btn { padding: 0.7rem 1.2rem; font-size: 0.85rem; }
+            .nav-icon-circle { width: 38px; height: 38px; }
+            .nav-icon { width: 16px; height: 16px; }
+
+            .app-phones { min-height: 500px; background-size: 80%; background-position: center; }
+            .app-text h2 { font-size: clamp(1.8rem, 5vw, 2.4rem); }
+            .hero { padding-top: 90px; }
+            section { min-height: 85vh; padding: 1.5rem 4%; }
+            .content { padding: 0 1rem; max-width: 95%; }
 
             .footer-bottom {
                 flex-direction: column;
@@ -1029,8 +1096,8 @@
             }
 
             #cta-canvas3d {
-                width: 700px;
-                height: 700px;
+                width: 540px;
+                height: 540px;
             }
 
             .cta-content h2 {
@@ -1042,7 +1109,7 @@
             }
 
             .stories-section {
-                padding: 4rem 5%;
+                padding: 3.2rem 5%;
             }
 
             .stories-grid {
@@ -1068,6 +1135,74 @@
                 height: 24px;
             }
         }
+
+        @media (max-width: 480px) {
+            .stories-grid { grid-template-columns: 1fr; gap: 1.5rem; }
+            .cta-section { height: 450px; }
+            #cta-canvas3d { width: 380px; height: 380px; }
+            .qr-icon { width: 80px; height: 80px; }
+            nav { padding: 1rem 4%; }
+            .logo { height: 26px; }
+            .nav-icon-circle { width: 36px; height: 36px; }
+            .nav-right .preorder-btn { display: none; }
+            section { min-height: 80vh; padding: 1rem 4%; }
+            .features-section { padding: 3rem 4%; }
+            .section-title { font-size: clamp(1.8rem, 8vw, 2.8rem); }
+            .hero-title { font-size: clamp(1.5rem, 7vw, 2.2rem); }
+            .app-text { padding: 2rem 1rem; }
+        }
+
+        /* Mobile menu overlay */
+        .mobile-menu {
+            display: none; /* enabled via media query */
+            position: fixed;
+            inset: 0;
+            background: rgba(5, 15, 30, 0.98);
+            backdrop-filter: blur(20px);
+            z-index: 2000;
+            transform: translateY(-100%);
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            padding: 8rem 10% 3rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .mobile-menu.open { transform: translateY(0); }
+        .mobile-menu ul { 
+            list-style: none; 
+            display: flex; 
+            flex-direction: column; 
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+        .mobile-menu a { 
+            color: #fff; 
+            text-decoration: none; 
+            font-size: 1.3rem; 
+            letter-spacing: 0.1em; 
+            text-transform: uppercase;
+            font-weight: 400;
+            transition: color 0.3s ease;
+            padding: 0.5rem 0;
+        }
+        .mobile-menu a:hover { color: #ff6b35; }
+        .mobile-menu .mobile-cta { 
+            display: flex; 
+            flex-direction: column;
+            gap: 1rem;
+            width: 100%;
+        }
+        .mobile-menu .btn-primary, .mobile-menu .btn-secondary { 
+            width: 100%;
+            text-align: center;
+            justify-content: center;
+        }
+
+        @media (max-width: 1024px) {
+            .mobile-menu { display: block; }
+        }
+
+        body.no-scroll { overflow: hidden; }
     </style>
 </head>
 <body>
@@ -1091,6 +1226,9 @@
         <div class="nav-left">
             <!-- Logo image: Group 3875.svg -->
             <img src="Group 3875.svg" alt="divePRO+ Logo" class="logo">
+            <button class="mobile-menu-toggle" aria-label="Open menu" aria-expanded="false" aria-controls="mobileMenu">
+                <span class="bar"></span>
+            </button>
             <ul class="nav-links">
                 <li><a href="#features">Features</a></li>
                 <li><a href="#application">Application</a></li>
@@ -1118,6 +1256,21 @@
             </a>
         </div>
     </nav>
+
+    <!-- Mobile Menu Overlay -->
+    <div class="mobile-menu" id="mobileMenu">
+        <ul>
+            <li><a href="#features" class="mobile-link">Features</a></li>
+            <li><a href="#application" class="mobile-link">Application</a></li>
+            <li><a href="#about" class="mobile-link">About Us</a></li>
+            <li><a href="#blog" class="mobile-link">Blog</a></li>
+            <li><a href="#contact" class="mobile-link">Contact</a></li>
+        </ul>
+        <div class="mobile-cta">
+            <a href="#preorder" class="btn-primary">Preorder now <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M1 8h12m0 0L9 4m4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg></a>
+            <a href="#downloads" class="btn-secondary">Download App</a>
+        </div>
+    </div>
 
     <section class="hero" id="hero">
         <div class="content">
@@ -1193,7 +1346,7 @@
         </center>
     </section>
 
-    <section class="app-section">
+    <section class="app-section" id="application">
         <div class="app-content">
             <div class="app-text">
                 <img src="assets/QR Code.png" alt="QR Code" class="qr-icon">
@@ -1260,7 +1413,7 @@
         </div>
     </section>
 
-    <section class="cta-section">
+    <section class="cta-section" id="preorder">
         <div class="cta-content">
             <canvas id="cta-canvas3d"></canvas>
             <div class="cta-text-overlay">
@@ -1275,7 +1428,7 @@
         </div>
     </section>
 
-    <footer>
+    <footer id="contact">
         <div class="footer-content">
             <div class="footer-brand">
                 <h3>THE FIRST DIVE AUGMENTED REALITY COMPUTER</h3>
@@ -1472,83 +1625,84 @@
         // GSAP ScrollTrigger Setup
         gsap.registerPlugin(ScrollTrigger);
 
-        // Section based animation states for smooth alignment
-        const sectionStates = [
-            {
-                trigger: '#hero',
-                position: { x: 2.2, y: 0.12 },
-                scale: 1.16,
-            },
-            {
-                trigger: '#section2',
-                position: { x: -3.45, y: -0.05 },
-                scale: 1.08,
-            },
-            {
-                trigger: '#section3',
-                position: { x: 3.3, y: 0.08 },
-                scale: 1.12,
-            },
-            {
-                trigger: '#section4',
-                position: { x: -3.1, y: 0 },
-                scale: 1.05,
-            },
-        ];
+        // Build section-based timelines per breakpoint to keep desktop identical and tune mobile/tablet
+        const mm = gsap.matchMedia();
 
-        // Apply initial state immediately
-        gsap.set(group.position, sectionStates[0].position);
-        gsap.set(group.scale, {
-            x: sectionStates[0].scale,
-            y: sectionStates[0].scale,
-            z: sectionStates[0].scale,
-        });
+        function buildTimeline(states, options = {}) {
+            const { scrub = 1.4, rotate = true, rotationScrub = 2 } = options;
 
-        // Build a master timeline that spans all sections for buttery transitions
-        const modelTimeline = gsap.timeline({
-            defaults: { duration: 1, ease: 'power3.inOut' },
-            scrollTrigger: {
-                trigger: '#hero',
-                start: 'top top',
-                endTrigger: '#section4',
-                end: 'bottom bottom',
-                scrub: 1.4,
-                snap: {
-                    snapTo: sectionStates.map((_, index) => index / (sectionStates.length - 1)),
-                    duration: { min: 0.2, max: 0.6 },
-                    ease: 'power1.inOut',
-                },
-            },
-        });
+            // Apply initial state
+            gsap.set(group.position, states[0].position);
+            gsap.set(group.scale, { x: states[0].scale, y: states[0].scale, z: states[0].scale });
 
-        sectionStates.slice(1).forEach((state) => {
-            modelTimeline
-                .to(group.position, {
-                    x: state.position.x,
-                    y: state.position.y,
-                })
-                .to(
-                    group.scale,
-                    {
-                        x: state.scale,
-                        y: state.scale,
-                        z: state.scale,
-                        ease: 'power2.inOut',
+            const tl = gsap.timeline({
+                defaults: { duration: 1, ease: 'power3.inOut' },
+                scrollTrigger: {
+                    trigger: '#hero',
+                    start: 'top top',
+                    endTrigger: '#section4',
+                    end: 'bottom bottom',
+                    scrub,
+                    snap: {
+                        snapTo: states.map((_, i) => i / (states.length - 1)),
+                        duration: { min: 0.2, max: 0.6 },
+                        ease: 'power1.inOut',
                     },
-                    '<'
-                );
+                },
+            });
+
+            states.slice(1).forEach((s) => {
+                tl.to(group.position, { x: s.position.x, y: s.position.y })
+                  .to(group.scale, { x: s.scale, y: s.scale, z: s.scale, ease: 'power2.inOut' }, '<');
+            });
+
+            let rotTween = null;
+            if (rotate) {
+                rotTween = gsap.to(group.rotation, {
+                    y: Math.PI * 2,
+                    scrollTrigger: { trigger: 'body', start: 'top top', end: 'bottom bottom', scrub: rotationScrub },
+                    ease: 'none'
+                });
+            }
+
+            return () => {
+                tl.scrollTrigger && tl.scrollTrigger.kill();
+                tl.kill();
+                if (rotTween) { rotTween.scrollTrigger && rotTween.scrollTrigger.kill(); rotTween.kill(); }
+            };
+        }
+
+        // Desktop: keep original positions/scales
+        mm.add('(min-width: 1025px)', () => {
+            const desktopStates = [
+                { trigger: '#hero',    position: { x: 2.2,  y: 0.12 }, scale: 1.16 },
+                { trigger: '#section2', position: { x: -3.45, y: -0.05 }, scale: 1.08 },
+                { trigger: '#section3', position: { x: 3.3,  y: 0.08 }, scale: 1.12 },
+                { trigger: '#section4', position: { x: -3.1, y: 0 },    scale: 1.05 },
+            ];
+            return buildTimeline(desktopStates, { scrub: 1.4, rotate: true, rotationScrub: 2 });
         });
 
-        // Smooth rotation animation with easing
-        gsap.to(group.rotation, {
-            y: Math.PI * 2,
-            scrollTrigger: {
-                trigger: 'body',
-                start: 'top top',
-                end: 'bottom bottom',
-                scrub: 2,
-            },
-            ease: "none"
+        // Tablet: bring model closer to center, slightly reduce motion/scale
+        mm.add('(max-width: 1024px) and (min-width: 769px)', () => {
+            const tabletStates = [
+                { trigger: '#hero',    position: { x: 1.6,  y: 0.10 }, scale: 1.08 },
+                { trigger: '#section2', position: { x: -2.2, y: -0.04 }, scale: 1.02 },
+                { trigger: '#section3', position: { x: 1.8,  y: 0.06 }, scale: 1.05 },
+                { trigger: '#section4', position: { x: -1.9, y: 0 },    scale: 1.0 },
+            ];
+            return buildTimeline(tabletStates, { scrub: 1.1, rotate: true, rotationScrub: 1.4 });
+        });
+
+        // Mobile: center-biased, minimal motion, no rotation for stability
+        mm.add('(max-width: 768px)', () => {
+            const mobileStates = [
+                { trigger: '#hero',    position: { x: 0.5,  y: 0.1 }, scale: 0.9 },
+                { trigger: '#section2', position: { x: -0.7, y: 0 }, scale: 0.85 },
+                { trigger: '#section3', position: { x: 0.6,  y: 0.05 }, scale: 0.88 },
+                { trigger: '#section4', position: { x: -0.5, y: 0 },    scale: 0.82 },
+            ];
+            return buildTimeline(mobileStates, { scrub: 0.8, rotate: false });
         });
 
         // Subtle idle float using requestAnimationFrame for micro-motion
@@ -1566,7 +1720,7 @@
             requestAnimationFrame(updateFloat);
         }
 
-        updateFloat();
+    updateFloat();
 
         // Animation loop
         function animate() {
@@ -1584,11 +1738,22 @@
         animate();
 
         // Handle window resize
+        function updateRendererDPR() {
+            const w = window.innerWidth;
+            let dpr = Math.min(window.devicePixelRatio, 2);
+            if (w <= 480) dpr = Math.min(window.devicePixelRatio, 1.25);
+            else if (w <= 1024) dpr = Math.min(window.devicePixelRatio, 1.5);
+            renderer.setPixelRatio(dpr);
+            ctaRenderer && ctaRenderer.setPixelRatio(dpr);
+        }
+
         window.addEventListener('resize', () => {
             camera.aspect = window.innerWidth / window.innerHeight;
             camera.updateProjectionMatrix();
             renderer.setSize(window.innerWidth, window.innerHeight);
+            updateRendererDPR();
         });
+        updateRendererDPR();
 
         // Hide/show 3D canvas based on scroll position
         function toggleCanvasVisibility() {
@@ -1645,14 +1810,49 @@
             });
         });
 
+        // Mobile menu toggle
+        const menuToggle = document.querySelector('.mobile-menu-toggle');
+        const mobileMenu = document.getElementById('mobileMenu');
+        const mainCanvas = document.getElementById('canvas3d');
+        function closeMobileMenu() {
+            mobileMenu.classList.remove('open');
+            menuToggle.classList.remove('active');
+            document.body.classList.remove('no-scroll');
+            menuToggle.setAttribute('aria-expanded', 'false');
+            if (mainCanvas) mainCanvas.style.display = '';
+        }
+        if (menuToggle && mobileMenu) {
+            menuToggle.addEventListener('click', () => {
+                const willOpen = !mobileMenu.classList.contains('open');
+                mobileMenu.classList.toggle('open', willOpen);
+                menuToggle.classList.toggle('active', willOpen);
+                document.body.classList.toggle('no-scroll', willOpen);
+                menuToggle.setAttribute('aria-expanded', String(willOpen));
+                if (mainCanvas) mainCanvas.style.display = willOpen ? 'none' : '';
+            });
+            mobileMenu.querySelectorAll('a.mobile-link').forEach(link => {
+                link.addEventListener('click', () => closeMobileMenu());
+            });
+            // Close on Escape
+            window.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape' && mobileMenu.classList.contains('open')) {
+                    closeMobileMenu();
+                }
+            });
+            // Close when clicking outside the content area
+            mobileMenu.addEventListener('click', (e) => {
+                if (e.target === mobileMenu) closeMobileMenu();
+            });
+        }
+
         // CTA Section - Static 3D Model
         const ctaCanvas = document.getElementById('cta-canvas3d');
         const ctaScene = new THREE.Scene();
         const ctaCamera = new THREE.PerspectiveCamera(75, 1, 0.1, 1000);
         const ctaRenderer = new THREE.WebGLRenderer({ canvas: ctaCanvas, alpha: true, antialias: true });
         
-        ctaRenderer.setSize(500, 500);
-        ctaRenderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    ctaRenderer.setSize(500, 500);
+    ctaRenderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
         ctaCamera.position.z = 6;
 
         // Lighting for CTA model
@@ -1747,12 +1947,17 @@
 
         // Handle window resize for CTA canvas
         function updateCTACanvasSize() {
-            const size = window.innerWidth <= 768 ? 700 : 1100;
+            const w = window.innerWidth;
+            let size = 1100;
+            if (w <= 480) size = 420;
+            else if (w <= 768) size = 540;
+            else if (w <= 1280) size = 900;
             ctaRenderer.setSize(size, size);
         }
         
-        window.addEventListener('resize', updateCTACanvasSize);
-        updateCTACanvasSize();
+    window.addEventListener('resize', () => { updateCTACanvasSize(); toggleCanvasVisibility(); });
+    window.addEventListener('load', () => { updateCTACanvasSize(); toggleCanvasVisibility(); });
+    updateCTACanvasSize();
     </script>
 </body>
 </html>
