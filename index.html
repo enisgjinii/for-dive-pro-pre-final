@@ -276,7 +276,7 @@
         .hero-title {
             font-weight: 700;
             letter-spacing: 0.008em;
-            font-size: clamp(1.8rem, 3.5vw, 3rem);
+            font-size: clamp(0.9rem, 1.8vw, 1.5rem);
         }
 
         .hero-title .hero-line {
@@ -676,6 +676,14 @@
             background: #f5f5f5;
             color: #0a1628;
             padding: 4rem 5% 3rem;
+            position: relative;
+            z-index: 100; /* Ensure footer is above 3D canvas */
+        }
+
+        /* Hide 3D canvas in footer area */
+        footer ~ #canvas3d,
+        footer + #canvas3d {
+            display: none !important;
         }
 
         .footer-content {
@@ -1148,7 +1156,7 @@
             section { min-height: 80vh; padding: 1rem 4%; }
             .features-section { padding: 3rem 4%; }
             .section-title { font-size: clamp(1.8rem, 8vw, 2.8rem); }
-            .hero-title { font-size: clamp(1.5rem, 7vw, 2.2rem); }
+            .hero-title { font-size: clamp(1.0rem, 4.5vw, 1.4rem); }
             .app-text { padding: 2rem 1rem; }
         }
 
@@ -1758,7 +1766,6 @@
         // Hide/show 3D canvas based on scroll position
         function toggleCanvasVisibility() {
             const appSection = document.querySelector('.app-section');
-            const ctaSection = document.querySelector('.cta-section');
             const footer = document.querySelector('footer');
             const canvas = document.getElementById('canvas3d');
             
@@ -1772,17 +1779,10 @@
                     if (isInAppSection) shouldHide = true;
                 }
                 
-                // Check if in CTA section (SEA BEYOND)
-                if (ctaSection) {
-                    const ctaSectionRect = ctaSection.getBoundingClientRect();
-                    const isInCtaSection = ctaSectionRect.top <= window.innerHeight && ctaSectionRect.bottom >= 0;
-                    if (isInCtaSection) shouldHide = true;
-                }
-                
-                // Check if in footer
+                // Check if in footer - improved detection
                 if (footer) {
                     const footerRect = footer.getBoundingClientRect();
-                    const isInFooter = footerRect.top <= window.innerHeight && footerRect.bottom >= 0;
+                    const isInFooter = footerRect.top <= window.innerHeight * 0.5; // Hide when footer starts appearing
                     if (isInFooter) shouldHide = true;
                 }
                 
