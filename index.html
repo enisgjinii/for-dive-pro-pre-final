@@ -1752,7 +1752,11 @@
             if (w <= 480) dpr = Math.min(window.devicePixelRatio, 1.25);
             else if (w <= 1024) dpr = Math.min(window.devicePixelRatio, 1.5);
             renderer.setPixelRatio(dpr);
-            ctaRenderer && ctaRenderer.setPixelRatio(dpr);
+            // Use the window-scoped renderer reference to avoid accessing
+            // the local `ctaRenderer` binding before it's initialized
+            // (which causes a TDZ ReferenceError). window.ctaRenderer
+            // will be undefined until the CTA renderer is created.
+            if (window.ctaRenderer) window.ctaRenderer.setPixelRatio(dpr);
         }
 
         window.addEventListener('resize', () => {
@@ -1850,7 +1854,10 @@
         const ctaScene = new THREE.Scene();
         const ctaCamera = new THREE.PerspectiveCamera(75, 1, 0.1, 1000);
         const ctaRenderer = new THREE.WebGLRenderer({ canvas: ctaCanvas, alpha: true, antialias: true });
-        
+        // Expose to window so other earlier-running helpers can safely
+        // inspect/update the CTA renderer without hitting the TDZ.
+        window.ctaRenderer = ctaRenderer;
+
     ctaRenderer.setSize(500, 500);
     ctaRenderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
         ctaCamera.position.z = 6;
