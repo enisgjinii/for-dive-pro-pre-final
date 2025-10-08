@@ -398,18 +398,23 @@
             visibility: hidden !important;
         }
 
+        /* Use CSS Grid for predictable two-column layout (text | mock) */
         .app-content {
-            display: flex;
+            display: grid;
             align-items: center;
-            justify-content: center; /* center children horizontally */
+            grid-template-columns: 1fr 640px; /* text column flexible, mock column fixed-ish */
             gap: 3rem;
             width: 100%;
             margin: 0 auto;
+            justify-content: center;
         }
 
+        /* App text: left-aligned on desktop, but mobile rules below will center it */
         .app-text {
-            flex: 1;
-            text-align: center; /* center text when phone is centered */
+            grid-column: 1 / 2;
+            text-align: left;
+            max-width: 560px;
+            padding-right: 1rem;
         }
 
         .app-text h2 {
@@ -459,16 +464,25 @@
         }
 
         .app-phones {
-            flex: 2;
+            grid-column: 2 / 3;
             display: flex;
-            justify-content: center;
+            justify-content: flex-end; /* keep the mock visually on the right */
             align-items: center;
-            background-image: url('assets/mock.png');
-            /* make phone visual noticeably smaller */
-            background-size: 80%;
-            background-repeat: no-repeat;
-            background-position: center;
-            min-height: 520px;
+            min-height: 780px; /* larger container so image can scale up */
+            width: 100%;
+            padding-left: 2rem; /* breathing room from the text */
+        }
+
+        /* Inline mock image for reliable responsive sizing */
+        .app-mock-image {
+            width: auto;
+            height: 96%; /* scale to container height while maintaining aspect ratio */
+            max-height: 900px; /* allow larger render on big screens */
+            object-fit: contain;
+            display: block;
+            pointer-events: none;
+            user-select: none;
+            transform: translateY(2%); /* slight visual lift */
         }
 
         /* Stories Section */
@@ -1057,13 +1071,14 @@
             .mobile-menu-toggle { display: flex; }
             .mobile-menu { display: block; }
 
-            .app-content { flex-direction: column; gap: 4rem; align-items: center; }
+            .app-content { grid-template-columns: 1fr; gap: 4rem; align-items: center; }
             .content { max-width: 90%; padding: 0 2rem; }
             .hero .content, .section2 .content, .section3 .content { margin: 0 auto; text-align: center; }
             section { padding: 2rem 5%; min-height: 90vh; }
             .hero { padding-top: 100px; min-height: 100vh; }
 
-            .app-phones { min-height: 420px; background-size: 60%; }
+            .app-phones { min-height: 520px; }
+            .app-mock-image { height: 92%; max-height: 720px; }
 
             .footer-content { grid-template-columns: 1fr; gap: 3rem; }
             .footer-section:nth-child(2), .footer-section:nth-child(3) { justify-self: start; text-align: left; }
@@ -1103,7 +1118,8 @@
             .nav-icon-circle { width: 38px; height: 38px; }
             .nav-icon { width: 16px; height: 16px; }
 
-            .app-phones { min-height: 320px; background-size: 50%; background-position: center; }
+            .app-phones { min-height: 360px; justify-content: center; padding-left: 0; }
+            .app-mock-image { height: 86%; max-height: 600px; }
             .app-text h2 { font-size: clamp(1.8rem, 5vw, 2.4rem); }
             .hero { padding-top: 90px; }
             section { min-height: 85vh; padding: 1.5rem 4%; }
@@ -1172,6 +1188,8 @@
             .section-title { font-size: clamp(1.8rem, 8vw, 2.8rem); }
             .hero-title { font-size: clamp(1.0rem, 4.5vw, 1.4rem); }
             .app-text { padding: 2rem 1rem; }
+            .app-phones { min-height: 280px; justify-content: center; padding-left: 0; }
+            .app-mock-image { height: 78%; max-height: 440px; }
         }
 
         /* Mobile menu overlay */
@@ -1395,7 +1413,8 @@
                 </div>
             </div>
             <div class="app-phones">
-                <!-- Background image will display here -->
+                <!-- Use an inline image for better responsive control -->
+                <img src="assets/mock.png" alt="Phone mock" class="app-mock-image">
             </div>
         </div>
     </section>
