@@ -314,88 +314,84 @@
             font-size: clamp(3rem, 6vw, 5rem);
         }
 
-        /* Video Section - Fixed for Parallax */
-        .video-section {
+        /* Immersive Video + Features Experience */
+        .video-experience {
             position: relative;
-            width: 100vw;
+            display: block;
+            width: 100%;
+            min-height: auto;
+            padding: 0;
+            padding-bottom: 120vh;
+            --video-progress: 0;
+        }
+
+        .video-container {
+            position: sticky;
+            top: 0;
             height: 100vh;
+            width: 100vw;
             overflow: hidden;
             z-index: 1;
         }
 
-        .video-background {
+        .video-container::after {
+            content: "";
             position: absolute;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            min-width: 100vw;
-            min-height: 100vh;
-            object-fit: cover;
-            object-position: center;
+            inset: 0;
+            background: linear-gradient(180deg, rgba(0, 3, 17, 0.35) 0%, rgba(0, 3, 17, 0.75) 100%);
+            pointer-events: none;
             z-index: 1;
         }
 
-        .video-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
+        .video-experience.is-sticky .video-container::after {
+            background: linear-gradient(180deg, rgba(0, 3, 17, 0.15) 0%, rgba(0, 3, 17, 0.65) 100%);
+        }
+
+        .video-background {
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.3);
+            object-fit: cover;
+            object-position: center;
+            transform: scale(calc(1.02 + var(--video-progress) * 0.06));
+            filter: brightness(calc(1 - var(--video-progress) * 0.15));
+            transition: transform 0.6s ease, filter 0.6s ease;
+        }
+
+        .video-overlay-content {
+            position: relative;
             z-index: 2;
+            margin-top: -32vh;
+            padding: clamp(6rem, 14vh, 12rem) 5% 8rem;
+            display: flex;
+            justify-content: center;
+            opacity: 0;
+            transform: translateY(80px);
+            pointer-events: none;
+            transition: opacity 0.6s ease, transform 0.6s ease;
         }
 
-        .video-content {
-            position: relative;
-            z-index: 3;
-            text-align: center;
-            color: white;
-            max-width: 800px;
-            padding: 2rem;
+        .video-overlay-content.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+            pointer-events: auto;
         }
 
-        .video-title {
-            font-size: clamp(2rem, 5vw, 4rem);
-            font-weight: 700;
-            margin-bottom: 2rem;
-            text-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
-        }
-
-        .video-description {
-            font-size: clamp(1rem, 2vw, 1.5rem);
-            line-height: 1.6;
-            opacity: 0.9;
-            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
-        }
-
-        /* Video Spacer - Creates space for the video section */
-        .video-spacer {
-            height: 100vh;
-            position: relative;
-            z-index: 1;
-        }
-
-        /* Features Section - Scrolls over video with parallax effect */
         .features-section {
-            /* Use the blue gradient colors with transparency so video shows through */
-            background: linear-gradient(135deg, rgba(0, 3, 17, 0.85) 0%, rgba(0, 43, 77, 0.85) 100%);
-            min-height: 100vh;
-            padding: 8rem 5%;
+            width: min(1120px, 100%);
+            background: linear-gradient(135deg, rgba(0, 3, 17, 0.78) 0%, rgba(0, 43, 77, 0.85) 100%);
+            padding: clamp(3rem, 6vw, 5rem);
+            border-radius: 32px;
             display: flex;
             flex-direction: column;
-            justify-content: center;
-            position: relative;
-            z-index: 10;
-            backdrop-filter: blur(5px);
+            gap: clamp(2.5rem, 5vw, 4rem);
+            box-shadow: 0 48px 120px rgba(0, 0, 0, 0.45);
+            backdrop-filter: blur(14px);
         }
 
         .features-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 4rem;
-            max-width: 1400px;
-            margin: 0 auto;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: clamp(2rem, 4vw, 3.5rem);
         }
 
         .feature-item {
@@ -422,9 +418,14 @@
             font-size: 0.95rem;
         }
 
+        .features-cta {
+            text-align: center;
+        }
+
         .view-all-btn {
             display: inline-block;
-            margin: 4rem auto 0;
+            margin: 0 auto;
+            margin-top: clamp(2rem, 4vw, 3.5rem);
             padding: 1rem 3rem;
             background: #ff6b35;
             color: #fff;
@@ -1157,6 +1158,10 @@
             .footer-contact { grid-template-columns: 1fr; gap: 1rem; }
             .footer-contact-left, .footer-contact-center, .footer-contact-right { justify-self: start; text-align: left; }
 
+            .video-experience { padding-bottom: 100vh; }
+            .video-overlay-content { margin-top: -24vh; padding: 9rem 6% 6rem; }
+            .features-section { border-radius: 28px; }
+
             .footer-legal-section { 
                 grid-template-columns: 1fr; 
                 gap: 1.5rem; 
@@ -1196,6 +1201,11 @@
             .hero { padding-top: 90px; }
             section { min-height: 85vh; padding: 1.5rem 4%; }
             .content { padding: 0 1rem; max-width: 95%; }
+
+            .video-experience { padding-bottom: 90vh; }
+            .video-overlay-content { margin-top: -18vh; padding: 7rem 7% 4.5rem; }
+            .features-section { padding: 2.5rem; border-radius: 24px; }
+            .view-all-btn { width: 100%; max-width: 320px; }
 
             .footer-bottom {
                 flex-direction: column;
@@ -1256,7 +1266,10 @@
             .nav-icon-circle { width: 36px; height: 36px; }
             .nav-right .preorder-btn { display: none; }
             section { min-height: 80vh; padding: 1rem 4%; }
-            .features-section { padding: 3rem 4%; }
+            .video-experience { padding-bottom: 80vh; }
+            .video-overlay-content { margin-top: -12vh; padding: 6rem 6% 3.5rem; }
+            .features-section { padding: 2.2rem 1.75rem; border-radius: 20px; }
+            .features-grid { gap: 1.8rem; }
             .section-title { font-size: clamp(1.8rem, 8vw, 2.8rem); }
             .hero-title { font-size: clamp(1.0rem, 4.5vw, 1.4rem); }
             .app-text { padding: 2rem 1rem; }
@@ -1446,39 +1459,42 @@
         </div>
     </section>
 
-    <section class="video-section" id="video">
-        <video class="video-background" autoplay muted loop playsinline>
-            <source src="video.mp4" type="video/mp4">
-            Your browser does not support the video tag.
-        </video>
-    </section>
-
-        <section class="features-section" id="features">
-        <div class="features-grid">
-            <div class="feature-item">
-                <img src="assets/vitals.png" alt="Vitals" class="feature-icon">
-                <h3 class="feature-title">Vitals</h3>
-                <p class="feature-desc">Heart rate and O₂ saturation, Heart Rate Variability (HRV), Breathing Rate & more</p>
-            </div>
-            <div class="feature-item">
-                <img src="assets/stats.png" alt="Dive Computer Data" class="feature-icon">
-                <h3 class="feature-title">Dive Computer Data</h3>
-                <p class="feature-desc">Depth, time, temperature, ascent speed, NDL awareness & more - all integrated into a single Augmented Reality view</p>
-            </div>
-            <div class="feature-item">
-                <img src="assets/tech-specs.png" alt="Tech Specs" class="feature-icon">
-                <h3 class="feature-title">Tech Specs</h3>
-                <p class="feature-desc">eSIM, GPS, Bluetooth, hours of continuous dive time and more</p>
-            </div>
-            <div class="feature-item">
-                <img src="assets/box.png" alt="What's in the box" class="feature-icon">
-                <h3 class="feature-title">What's in the box</h3>
-                <p class="feature-desc">divePRO AR Dive Computer Mask, Magnetic USB charging cable, Premium neoprene mask strap</p>
+    <section class="video-experience" id="video">
+        <div class="video-container">
+            <video class="video-background" autoplay muted loop playsinline>
+                <source src="video.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+        </div>
+        <div class="video-overlay-content" id="features">
+            <div class="features-section">
+                <div class="features-grid">
+                    <div class="feature-item">
+                        <img src="assets/vitals.png" alt="Vitals" class="feature-icon">
+                        <h3 class="feature-title">Vitals</h3>
+                        <p class="feature-desc">Heart rate and O₂ saturation, Heart Rate Variability (HRV), Breathing Rate & more</p>
+                    </div>
+                    <div class="feature-item">
+                        <img src="assets/stats.png" alt="Dive Computer Data" class="feature-icon">
+                        <h3 class="feature-title">Dive Computer Data</h3>
+                        <p class="feature-desc">Depth, time, temperature, ascent speed, NDL awareness & more - all integrated into a single Augmented Reality view</p>
+                    </div>
+                    <div class="feature-item">
+                        <img src="assets/tech-specs.png" alt="Tech Specs" class="feature-icon">
+                        <h3 class="feature-title">Tech Specs</h3>
+                        <p class="feature-desc">eSIM, GPS, Bluetooth, hours of continuous dive time and more</p>
+                    </div>
+                    <div class="feature-item">
+                        <img src="assets/box.png" alt="What's in the box" class="feature-icon">
+                        <h3 class="feature-title">What's in the box</h3>
+                        <p class="feature-desc">divePRO AR Dive Computer Mask, Magnetic USB charging cable, Premium neoprene mask strap</p>
+                    </div>
+                </div>
+                <div class="features-cta">
+                    <a href="#" class="view-all-btn">View All Features</a>
+                </div>
             </div>
         </div>
-        <center>
-            <a href="#" class="view-all-btn">View All Features</a>
-        </center>
     </section>
 
     <section class="app-section" id="application">
@@ -2103,35 +2119,81 @@
     window.addEventListener('load', () => { updateCTACanvasSize(); toggleCanvasVisibility(); });
     updateCTACanvasSize();
 
-    // Video Parallax Effect
-    const videoSection = document.querySelector('.video-section');
-    const videoBackground = document.querySelector('.video-background');
-    
-    function handleVideoParallax() {
-        if (!videoSection || !videoBackground) return;
-        
-        const videoRect = videoSection.getBoundingClientRect();
-        const windowHeight = window.innerHeight;
-        
-        // When video section reaches viewport
-        if (videoRect.top <= 0 && videoRect.bottom >= windowHeight) {
-            // Video section is in "sticky" zone
-            videoBackground.style.position = 'fixed';
-            videoBackground.style.top = '0';
-        } else if (videoRect.top > 0) {
-            // Video section hasn't reached yet
-            videoBackground.style.position = 'absolute';
-            videoBackground.style.top = '0';
+    // Advanced sticky video overlay interactions
+    const videoExperienceEl = document.querySelector('.video-experience');
+    const videoOverlayEl = document.querySelector('.video-overlay-content');
+
+    if (videoExperienceEl && videoOverlayEl) {
+        const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+        if (prefersReducedMotion) {
+            videoExperienceEl.style.setProperty('--video-progress', '1');
+            videoOverlayEl.classList.add('is-visible');
         } else {
-            // Video section has passed
-            videoBackground.style.position = 'absolute';
-            videoBackground.style.top = '0';
+            if (!('IntersectionObserver' in window)) {
+                videoExperienceEl.style.setProperty('--video-progress', '1');
+                videoOverlayEl.classList.add('is-visible');
+            } else {
+                let ticking = false;
+                let active = false;
+
+                const updateExperience = () => {
+                    const rect = videoExperienceEl.getBoundingClientRect();
+                    const viewportHeight = window.innerHeight || document.documentElement.clientHeight;
+                    const totalHeight = rect.height + viewportHeight;
+                    const scrollWithin = viewportHeight - rect.top;
+                    const progressRaw = scrollWithin / totalHeight;
+                    const progress = Math.min(1, Math.max(0, progressRaw));
+
+                    videoExperienceEl.style.setProperty('--video-progress', progress.toFixed(4));
+
+                    const stickyActive = rect.top <= 0 && rect.bottom >= viewportHeight;
+                    videoExperienceEl.classList.toggle('is-sticky', stickyActive);
+
+                    const overlayVisible = progress > 0.25;
+                    videoOverlayEl.classList.toggle('is-visible', overlayVisible);
+
+                    ticking = false;
+                };
+
+                const requestTick = () => {
+                    if (!ticking) {
+                        ticking = true;
+                        window.requestAnimationFrame(updateExperience);
+                    }
+                };
+
+                const scrollHandler = () => {
+                    if (!active) return;
+                    requestTick();
+                };
+
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach((entry) => {
+                        active = entry.isIntersecting;
+                        videoExperienceEl.classList.toggle('is-active', active);
+
+                        if (active) {
+                            requestTick();
+                        } else {
+                            ticking = false;
+                            videoExperienceEl.classList.remove('is-sticky');
+                            videoOverlayEl.classList.remove('is-visible');
+                            videoExperienceEl.style.setProperty('--video-progress', '0');
+                        }
+                    });
+                }, { root: null, threshold: 0, rootMargin: '0px 0px -20%' });
+
+                observer.observe(videoExperienceEl);
+
+                window.addEventListener('scroll', scrollHandler, { passive: true });
+                window.addEventListener('resize', requestTick);
+                window.addEventListener('load', requestTick);
+
+                requestTick();
+            }
         }
     }
-    
-    window.addEventListener('scroll', handleVideoParallax);
-    window.addEventListener('load', handleVideoParallax);
-    handleVideoParallax();
     </script>
 </body>
 </html>
