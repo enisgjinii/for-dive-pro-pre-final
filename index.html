@@ -401,13 +401,15 @@
         .app-content {
             display: flex;
             align-items: center;
-            gap: 5rem;
+            justify-content: center; /* center children horizontally */
+            gap: 3rem;
             width: 100%;
             margin: 0 auto;
         }
 
         .app-text {
             flex: 1;
+            text-align: center; /* center text when phone is centered */
         }
 
         .app-text h2 {
@@ -462,10 +464,11 @@
             justify-content: center;
             align-items: center;
             background-image: url('assets/mock.png');
-            background-size: 150%;
+            /* make phone visual noticeably smaller */
+            background-size: 80%;
             background-repeat: no-repeat;
             background-position: center;
-            min-height: 900px;
+            min-height: 520px;
         }
 
         /* Stories Section */
@@ -575,8 +578,8 @@
         }
 
         .phone-mockup {
-            width: 280px;
-            height: 570px;
+            width: 200px;
+            height: 420px;
             background: linear-gradient(135deg, #1a2850 0%, #0f1a35 100%);
             border-radius: 40px;
             border: 8px solid #000;
@@ -1054,13 +1057,13 @@
             .mobile-menu-toggle { display: flex; }
             .mobile-menu { display: block; }
 
-            .app-content { flex-direction: column; gap: 4rem; }
+            .app-content { flex-direction: column; gap: 4rem; align-items: center; }
             .content { max-width: 90%; padding: 0 2rem; }
             .hero .content, .section2 .content, .section3 .content { margin: 0 auto; text-align: center; }
             section { padding: 2rem 5%; min-height: 90vh; }
             .hero { padding-top: 100px; min-height: 100vh; }
 
-            .app-phones { min-height: 600px; background-size: contain; }
+            .app-phones { min-height: 420px; background-size: 60%; }
 
             .footer-content { grid-template-columns: 1fr; gap: 3rem; }
             .footer-section:nth-child(2), .footer-section:nth-child(3) { justify-self: start; text-align: left; }
@@ -1100,7 +1103,7 @@
             .nav-icon-circle { width: 38px; height: 38px; }
             .nav-icon { width: 16px; height: 16px; }
 
-            .app-phones { min-height: 500px; background-size: 80%; background-position: center; }
+            .app-phones { min-height: 320px; background-size: 50%; background-position: center; }
             .app-text h2 { font-size: clamp(1.8rem, 5vw, 2.4rem); }
             .hero { padding-top: 90px; }
             section { min-height: 85vh; padding: 1.5rem 4%; }
