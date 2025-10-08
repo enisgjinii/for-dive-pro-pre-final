@@ -21,7 +21,14 @@
 
         body {
             font-family: 'Neue Haas Grotesk Display Pro', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            background: #000;
+            /* Fixed background image that stays while the user scrolls */
+            background-image: url('assets/background-image.jpg');
+            background-size: cover;
+            background-position: center center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            /* Fallback color */
+            background-color: #000;
             color: #fff;
             overflow-x: hidden;
         }
@@ -233,11 +240,13 @@
         }
 
         .section2 {
-            background: linear-gradient(180deg, rgba(26, 47, 77, 0.5) 0%, rgba(42, 74, 109, 0.5) 100%);
+            background: linear-gradient(180deg, rgba(26, 47, 77, 0.55) 0%, rgba(42, 74, 109, 0.5) 100%);
+            backdrop-filter: blur(1px);
         }
 
         .section3 {
-            background: linear-gradient(180deg, rgba(42, 74, 109, 0.5) 0%, rgba(26, 58, 93, 0.5) 100%);
+            background: linear-gradient(180deg, rgba(42, 74, 109, 0.55) 0%, rgba(26, 58, 93, 0.5) 100%);
+            backdrop-filter: blur(1px);
         }
 
         .content {
@@ -307,7 +316,8 @@
 
         /* Features Section */
         .features-section {
-            background: linear-gradient(180deg, rgba(21, 40, 64, 0.8) 0%, rgba(26, 53, 80, 0.8) 100%);
+            /* keep translucent so the fixed background shows through */
+            background: linear-gradient(180deg, rgba(21, 40, 64, 0.75) 0%, rgba(26, 53, 80, 0.7) 100%);
             min-height: 100vh;
             padding: 8rem 5%;
             display: flex;
@@ -366,7 +376,7 @@
 
         /* App Section */
         .app-section {
-            background: linear-gradient(135deg, rgba(5, 15, 30, 0.95) 0%, rgba(10, 25, 45, 0.95) 100%);
+            background: linear-gradient(135deg, rgba(5, 15, 30, 0.8) 0%, rgba(10, 25, 45, 0.75) 100%);
             min-height: 100vh;
             display: flex;
             align-items: center;
@@ -377,7 +387,10 @@
 
         /* Ensure same background for stories section */
         .stories-section {
-            background: linear-gradient(135deg, rgba(5, 15, 30, 0.95) 0%, rgba(10, 25, 45, 0.95) 100%) !important;
+            background: linear-gradient(135deg, rgba(5, 15, 30, 0.8) 0%, rgba(10, 25, 45, 0.75) 100%) !important;
+            padding: 6rem 5%;
+            position: relative;
+            z-index: 20;
         }
 
         .app-section #canvas3d {
@@ -583,10 +596,8 @@
 
         /* CTA Section */
         .cta-section {
-            background-image: url('assets/AdobeStock_951313034.png');
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
+            /* Translucent overlay so the global fixed background remains visible */
+            background: linear-gradient(180deg, rgba(0,0,0,0.25), rgba(0,0,0,0.35));
             height: 749px;
             display: flex;
             align-items: center;
@@ -1211,6 +1222,22 @@
         }
 
         body.no-scroll { overflow: hidden; }
+
+        /* Mobile fallback: some mobile browsers ignore background-attachment: fixed
+           so we provide an alternate strategy using a fixed positioned pseudo element */
+        @supports (-webkit-overflow-scrolling: touch) {
+            body::before {
+                content: '';
+                position: fixed;
+                inset: 0;
+                background-image: url('assets/background-image.jpg');
+                background-size: cover;
+                background-position: center center;
+                z-index: -1;
+                filter: none;
+            }
+            body { background-attachment: scroll; }
+        }
     </style>
 </head>
 <body>
@@ -1562,6 +1589,8 @@
         // Group for imported model
         const group = new THREE.Group();
         scene.add(group);
+    // Default hero-facing rotation: tilt model to look left (~45°)
+    const HERO_ROT_Y = Math.PI * 0.25; // 45 degrees
         
         const loader = new THREE.GLTFLoader();
         if (window.MeshoptDecoder) {
@@ -1614,6 +1643,8 @@
 
                 const pivot = new THREE.Group();
                 pivot.add(model);
+                // Orient the model to face left in the hero
+                pivot.rotation.y = HERO_ROT_Y;
 
                 const maxAxis = Math.max(size.x, size.y, size.z) || 1;
                 const scale = targetModelSize / maxAxis;
@@ -1642,6 +1673,8 @@
             // Apply initial state
             gsap.set(group.position, states[0].position);
             gsap.set(group.scale, { x: states[0].scale, y: states[0].scale, z: states[0].scale });
+            // Start with the hero-facing rotation
+            gsap.set(group.rotation, { x: 0, y: HERO_ROT_Y, z: 0 });
 
             const tl = gsap.timeline({
                 defaults: { duration: 1, ease: 'power3.inOut' },
@@ -1666,8 +1699,9 @@
 
             let rotTween = null;
             if (rotate) {
+                // Gentle rotation nudging around the base HERO_ROT_Y to keep motion subtle
                 rotTween = gsap.to(group.rotation, {
-                    y: Math.PI * 2,
+                    y: HERO_ROT_Y + (Math.PI * 0.06), // ~11 degree sweep from base
                     scrollTrigger: { trigger: 'body', start: 'top top', end: 'bottom bottom', scrub: rotationScrub },
                     ease: 'none'
                 });
@@ -1936,6 +1970,8 @@
                 const maxAxis = Math.max(size.x, size.y, size.z) || 1;
                 const scale = ctaTargetModelSize / maxAxis;
                 pivot.scale.setScalar(scale);
+                // Orient CTA pivot to match hero-facing rotation
+                if (typeof HERO_ROT_Y !== 'undefined') pivot.rotation.y = HERO_ROT_Y;
 
                 ctaGroup.add(pivot);
             },
