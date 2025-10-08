@@ -314,15 +314,80 @@
             font-size: clamp(3rem, 6vw, 5rem);
         }
 
-        /* Features Section */
+        /* Video Section - Fixed for Parallax */
+        .video-section {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .video-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            min-width: 100vw;
+            min-height: 100vh;
+            object-fit: cover;
+            object-position: center;
+            z-index: 1;
+        }
+
+        .video-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.3);
+            z-index: 2;
+        }
+
+        .video-content {
+            position: relative;
+            z-index: 3;
+            text-align: center;
+            color: white;
+            max-width: 800px;
+            padding: 2rem;
+        }
+
+        .video-title {
+            font-size: clamp(2rem, 5vw, 4rem);
+            font-weight: 700;
+            margin-bottom: 2rem;
+            text-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+        }
+
+        .video-description {
+            font-size: clamp(1rem, 2vw, 1.5rem);
+            line-height: 1.6;
+            opacity: 0.9;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Video Spacer - Creates space for the video section */
+        .video-spacer {
+            height: 100vh;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Features Section - Scrolls over video with parallax effect */
         .features-section {
-            /* Use the blue gradient colors from the design */
-            background: linear-gradient(135deg, #000311 0%, #002B4D 100%);
+            /* Use the blue gradient colors with transparency so video shows through */
+            background: linear-gradient(135deg, rgba(0, 3, 17, 0.85) 0%, rgba(0, 43, 77, 0.85) 100%);
             min-height: 100vh;
             padding: 8rem 5%;
             display: flex;
             flex-direction: column;
             justify-content: center;
+            position: relative;
+            z-index: 10;
+            backdrop-filter: blur(5px);
         }
 
         .features-grid {
@@ -376,21 +441,23 @@
 
         /* App Section */
         .app-section {
-            background: linear-gradient(135deg, #000311 0%, #002B4D 100%);
+            background: linear-gradient(135deg, rgba(0, 3, 17, 0.85) 0%, rgba(0, 43, 77, 0.85) 100%);
             min-height: 100vh;
             display: flex;
             align-items: center;
             padding: 5rem 5%;
             position: relative;
             z-index: 20;
+            backdrop-filter: blur(5px);
         }
 
         /* Ensure same background for stories section */
         .stories-section {
-            background: linear-gradient(135deg, #000311 0%, #002B4D 100%) !important;
+            background: linear-gradient(135deg, rgba(0, 3, 17, 0.85) 0%, rgba(0, 43, 77, 0.85) 100%) !important;
             padding: 6rem 5%;
             position: relative;
             z-index: 20;
+            backdrop-filter: blur(5px);
         }
 
         .app-section #canvas3d {
@@ -487,10 +554,11 @@
 
         /* Stories Section */
         .stories-section {
-            background: linear-gradient(135deg, #000311 0%, #002B4D 100%);
+            background: linear-gradient(135deg, rgba(0, 3, 17, 0.85) 0%, rgba(0, 43, 77, 0.85) 100%);
             padding: 6rem 5%;
             position: relative;
             z-index: 20;
+            backdrop-filter: blur(5px);
         }
 
         .stories-container {
@@ -1378,6 +1446,13 @@
         </div>
     </section>
 
+    <section class="video-section" id="video">
+        <video class="video-background" autoplay muted loop playsinline>
+            <source src="video.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+    </section>
+
         <section class="features-section" id="features">
         <div class="features-grid">
             <div class="feature-item">
@@ -2027,6 +2102,36 @@
     window.addEventListener('resize', () => { updateCTACanvasSize(); toggleCanvasVisibility(); });
     window.addEventListener('load', () => { updateCTACanvasSize(); toggleCanvasVisibility(); });
     updateCTACanvasSize();
+
+    // Video Parallax Effect
+    const videoSection = document.querySelector('.video-section');
+    const videoBackground = document.querySelector('.video-background');
+    
+    function handleVideoParallax() {
+        if (!videoSection || !videoBackground) return;
+        
+        const videoRect = videoSection.getBoundingClientRect();
+        const windowHeight = window.innerHeight;
+        
+        // When video section reaches viewport
+        if (videoRect.top <= 0 && videoRect.bottom >= windowHeight) {
+            // Video section is in "sticky" zone
+            videoBackground.style.position = 'fixed';
+            videoBackground.style.top = '0';
+        } else if (videoRect.top > 0) {
+            // Video section hasn't reached yet
+            videoBackground.style.position = 'absolute';
+            videoBackground.style.top = '0';
+        } else {
+            // Video section has passed
+            videoBackground.style.position = 'absolute';
+            videoBackground.style.top = '0';
+        }
+    }
+    
+    window.addEventListener('scroll', handleVideoParallax);
+    window.addEventListener('load', handleVideoParallax);
+    handleVideoParallax();
     </script>
 </body>
 </html>
